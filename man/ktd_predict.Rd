@@ -2,30 +2,32 @@
 % Please edit documentation in R/ktd_predict.R
 \name{ktd_predict}
 \alias{ktd_predict}
-\title{Predict outcome using estimated kernel Tweedie model coefficients}
+\title{Predict outcome using fitted kernel Tweedie model}
 \usage{
-ktd_predict(x.test, model, which.hyperparam = 1, type = "link", KernelMatrix)
+ktd_predict(model, newdata, which.lam1 = 1, type = "link")
 }
 \arguments{
-\item{x}{Covariate matrix.}
+\item{model}{Fitted model from \code{\link{ktd_estimate}}}
 
-\item{fit}{Fitted model from \code{\link{TD_estimate}}}
+\item{newdata}{New x matrix for the prediction. If not provided, it will be the x matrix used to fit \code{model}.}
+
+\item{which.lam1}{The index of the \code{lam1} in \code{model} used in the prediction. Default is 1.}
+
+\item{type}{The type of prediction to be made - "\code{link}" for the linear predictor and "\code{response}" for the predicted outcome. Default is "\code{link}".}
 }
 \description{
-\code{TD_predict()} predicts the coefficients of the Tweedie compound poisson gamma model in the RKHS. Input is the estimated coefficients, covariate matrix of new data whose outcomes are to be predicted.
+\code{ktd_predict()} predicts the outcome with fitted \code{ktweedie} or \code{sktweedie} model at the user supplied new data.
 }
 \details{
-\code{TD_predict()} uses the fitted model from \code{\link{TD_estimate}} to estimate the mean claim cost for new data points.
+\code{ktd_predict()} uses the fitted model from \code{\link{ktd_estimate}} to estimate the mean outcome for new data points.
 }
 \examples{
-kern <- rbfdot(sigma = 0.01)
-# X: N * p matrix
-\dontrun{fit <- TD_estimate(x = X, z = Z, kern = kern,
-                            LamReg = 10, phi = 1.8,
-                            rho = 1.2, ftol = 1e-10,
-                            partol = 1e-15, maxit = 1e6,
-                            quiet = TRUE)}
-# newdata: n * p matrix
-\dontrun{pred <- TD_predict(x = newdata, model = fit)}
-
+fit <- ktd_estimate(x = dat$x, y = dat$y,
+                    kern = rbfdot(sigma = 1e-6),
+                    lam1 = 10^(-5:1))
+newx <- matrix(rnorm(10 * ncol(dat$x)), nrow = 10)
+pred <- ktd_predict(model = fit, newdata = newx, which.lam1 = 3, type = "link")
+}
+\seealso{
+\code{\link{ktd_estimate}}, \code{\link{ktd_cv}}, \code{\link{ktd_cv2d}}
 }

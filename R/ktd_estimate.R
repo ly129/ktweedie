@@ -1,11 +1,11 @@
 #' Estimate kernel Tweedie model coefficients
 #'
-#' \code{ktd_estimate()} estimates the coefficients of the \code{ktweedie} and the \code{sktweedie} model (s for sparse). The latter has an integrated feature selection component that induces sparsity by applying weights on the features and penalizing the weights.
+#' \code{ktd_estimate()} estimates the coefficients of the Kernel Tweedie model \code{ktweedie} and the sparse kernel Tweedie model \code{sktweedie}. The latter has an integrated feature selection component that induces sparsity by applying weights on the features and penalizing the weights.
 #'
 #' @param x Covariate matrix.
 #' @param y Outcome vector (e.g. insurance cost).
-#' @param kern Choice of kernel. See \code{\link{dots}} for details on supported kernel functions. It can also simply be a matrix for the {ktweedie}.
-#' @param lam1 A vector of candidate regularization coefficients used in cross-validation.
+#' @param kern Choice of kernel. See \code{\link{dots}} for details on supported kernel functions.
+#' @param lam1 A vector of regularization coefficients.
 #' @param rho The power parameter of the Tweedie model. Default is 1.5 and can take any real value between 1 and 2.
 #' @param ftol Stopping criterion based on objective function value. Default is 1e-8.
 #' @param partol Stopping criterion based on the coefficient values. Default is 1e-8.
@@ -20,11 +20,33 @@
 #' @details
 #' \code{ktd_estimate()} stops when the absolute difference between the objective function values of the last two updates is smaller than \code{ftol}, or the sum of absolute differences between the coefficients of the last two updates is smaller than \code{partol}, before \code{maxit} is reached.
 #'
+#' @seealso \code{\link{ktd_cv}}, \code{\link{ktd_cv2d}}, \code{\link{ktd_predict}}
+#'
 #' @examples
+#' ###### ktweedie ######
 #' lam1.seq <- c(1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1)
-#' ( fit <- ktd_estimate(x = x, y = y,
-#'                       kern = rbfdot(sigma = 1e-8),
-#'                       lam1 = lam1.seq) )
+#' fit <- ktd_estimate(x = dat$x, y = dat$y,
+#'                     kern = rbfdot(sigma = 1e-8),
+#'                     lam1 = lam1.seq)
+#' ###### sktweedie ######
+#' \dontrun{# use ktd_cv2d to tune lam1 and sigma in the rbfdot()
+#' cv2d <- ktd_cv2d(x = dat$x, y = dat$y,
+#'                  kernfunc = rbfdot,
+#'                  lambda = c(1e-5, 1e1),
+#'                  sigma = c(1e-5, 1e1),
+#'                  ncoefs = 10)
+#' # Set sparsity to TRUE and a lam2 to control the level of sparsity
+#' # Decrease lam2 if "WARNING: All weights are zero..."
+#' fit.sparse <- ktd_estimate(x = dat$x, y = dat$y,
+#'                            kern = rbfdot(sigma = cv2d$Best_sigma),
+#'                            lam1 = cv2d$Best_lambda,
+#'                            sparsity = TRUE,
+#'                            lam2 = 6,
+#'                            innerpartol = 1e-4,
+#'                            verbose = TRUE)
+#' # variables with fitted weight equal to 0 are not selected
+#' var_weights <- fit.sparse$estimates[[1]]$weight
+#' plot(var_weights)   # First 5 variables are significant in data generation.}
 #'
 #' @export
 #'
@@ -110,7 +132,7 @@ ktd_estimate <- function(x, y, kern, lam1, rho = 1.5,
         estimates[[i]] <- list(convergence = fit$convergence[i])
       } else {
         estimates[[i]] <- list(fn = fit$fn_final[i],
-                               grad = matrix(fit$gradf_final[((i-1)*N+1):(i*N)], ncol = 1),
+                               # grad = matrix(fit$gradf_final[((i-1)*N+1):(i*N)], ncol = 1),
                                coefficient = matrix(fit$param_final[((i-1)*N+1):(i*N)], ncol = 1),
                                weight = matrix(fit$wt_final[((i-1)*p+1):(i*p)], ncol = 1),
                                convergence = fit$convergence[i]
@@ -123,16 +145,11 @@ ktd_estimate <- function(x, y, kern, lam1, rho = 1.5,
   }
 
   if (!sparsity) {
+    if (length(kern@kpar[[1]]) != 1) stop("Please supply one set of parameters in the kernel function.")
+
     lam1 <- sort(lam1, decreasing = TRUE)
     lam2 <- rep(0, nhyper)
-    if (is.matrix(kern)) {
-      K <- kern
-    } else {
-      K <- as.matrix(kernelMatrix(kernel = kern, x))
-      sigma <- kern@kpar$sigma
-    }
-
-    if (length(sigma) != 1) stop("Please supply one set of parameters in the kernel function.")
+    K <- as.matrix(kernelMatrix(kernel = kern, x))
 
     fit <- .Fortran("td_bfgs",
                     as.integer(N),
@@ -162,10 +179,7 @@ ktd_estimate <- function(x, y, kern, lam1, rho = 1.5,
         estimates[[i]] <- list(convergence = fit$conv[i])
       } else {
         estimates[[i]] <- list(fn = fit$resfn[i],
-                               grad = matrix(fit$resgradf[((i-1)*N+1):(i*N)], ncol = 1),
                                coefficient = matrix(fit$resparam[((i-1)*N+1):(i*N)], ncol = 1),
-                               intercept = fit$resint[i],
-                               weight = matrix(1, nrow = p, ncol = 1),
                                convergence = fit$conv[i]
         )
       }
@@ -174,19 +188,9 @@ ktd_estimate <- function(x, y, kern, lam1, rho = 1.5,
     names(estimates) <- estimates.name
   }
 
-  if (is.matrix(kern)) {
-    data <- list(
-      x = x,
-      kernel = kern,
-      lambda1 = lam1
-    )
-  } else {
-    data <- list(x = x,
-                 kernel = kern,
-                 lambda1 = lam1,
-                 sigma = rep(sigma, nhyper)
-    )
-  }
+  data <- list(x = x,
+               kernel = kern,
+               lambda1 = lam1)
 
   if (sparsity) {
     data$lambda2 = lam2

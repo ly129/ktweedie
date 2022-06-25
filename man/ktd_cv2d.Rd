@@ -2,7 +2,7 @@
 % Please edit documentation in R/ktd_cv2d.R
 \name{ktd_cv2d}
 \alias{ktd_cv2d}
-\title{Cross validation for jointly tuning the regularization coefficient and kernel parameter in the ktweedie Model}
+\title{Cross validation for jointly tuning the regularization coefficient and kernel parameter in the Kernel Tweedie Model}
 \usage{
 ktd_cv2d(
   x,
@@ -60,7 +60,7 @@ A list of three items.
                    sigma = c(1e-10, 1e0),
                    ncoefs = 6) )
 ### Followed by fitting
-fit <- ktd_estimate(x = x, y = y,
+fit <- ktd_estimate(x = dat$x, y = dat$y,
                     kern = rbfdot(sigma = cv2d$Best_sigma),
                     lam1 = cv2d$Best_lambda)
 }

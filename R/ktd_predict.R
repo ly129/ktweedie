@@ -1,65 +1,57 @@
-#' Predict outcome using estimated kernel Tweedie model coefficients
+#' Predict outcome using fitted kernel Tweedie model
 #'
-#' \code{TD_predict()} predicts the coefficients of the Tweedie compound poisson gamma model in the RKHS. Input is the estimated coefficients, covariate matrix of new data whose outcomes are to be predicted.
+#' \code{ktd_predict()} predicts the outcome with fitted \code{ktweedie} or \code{sktweedie} model at the user supplied new data.
 #'
-#' @param x Covariate matrix.
-#' @param fit Fitted model from \code{\link{TD_estimate}}
-#'
+#' @param model Fitted model from \code{\link{ktd_estimate}}
+#' @param newdata New x matrix for the prediction. If not provided, it will be the x matrix used to fit \code{model}.
+#' @param which.lam1 The index of the \code{lam1} in \code{model} used in the prediction. Default is 1.
+#' @param type The type of prediction to be made - "\code{link}" for the linear predictor and "\code{response}" for the predicted outcome. Default is "\code{link}".
 #' @details
-#' \code{TD_predict()} uses the fitted model from \code{\link{TD_estimate}} to estimate the mean claim cost for new data points.
+#' \code{ktd_predict()} uses the fitted model from \code{\link{ktd_estimate}} to estimate the mean outcome for new data points.
+#'
+#' @seealso \code{\link{ktd_estimate}}, \code{\link{ktd_cv}}, \code{\link{ktd_cv2d}}
 #'
 #' @examples
-#' kern <- rbfdot(sigma = 0.01)
-#' # X: N * p matrix
-#' \dontrun{fit <- TD_estimate(x = X, z = Z, kern = kern,
-#'                             LamReg = 10, phi = 1.8,
-#'                             rho = 1.2, ftol = 1e-10,
-#'                             partol = 1e-15, maxit = 1e6,
-#'                             quiet = TRUE)}
-#' # newdata: n * p matrix
-#' \dontrun{pred <- TD_predict(x = newdata, model = fit)}
-#'
+#' fit <- ktd_estimate(x = dat$x, y = dat$y,
+#'                     kern = rbfdot(sigma = 1e-6),
+#'                     lam1 = 10^(-5:1))
+#' newx <- matrix(rnorm(10 * ncol(dat$x)), nrow = 10)
+#' pred <- ktd_predict(model = fit, newdata = newx, which.lam1 = 3, type = "link")
 #' @export
 #'
 #'
-ktd_predict <- function(x.test, model, which.hyperparam = 1, type = "link", KernelMatrix) {
-  if (!missing(x.test)) {
-    x.test <- as.matrix(x.test)
+ktd_predict <- function(model, newdata, which.lam1 = 1, type = "link") {
+  if (!missing(newdata)) {
+    newdata <- as.matrix(newdata)
+  } else {
+    newdata <- model$data$x
   }
   sk <- model$sparsity
-  fit <- model$estimates[[which.hyperparam]]
-  hyperparameter <- list(lambda1 = model$data$lambda1[which.hyperparam])
+  fit <- model$estimates[[which.lam1]]
+  hyperparameter <- list(lambda1 = model$data$lambda1[which.lam1])
+
   if (sk) {
-    hyperparameter$lambda2 <- model$data$lambda2[which.hyperparam]
-    sigma <- model$data$sigma[which.hyperparam]
+    hyperparameter$lambda2 <- model$data$lambda2[which.lam1]
+    sigma <- model$data$sigma[which.lam1]
     hyperparameter$sigma <- sigma
     kern <- rbfdot(sigma = sigma)
     wt <- fit$weight
     wx <- t(apply(model$data$x, MARGIN = 1, FUN = '*', wt))
-    wx.test <- t(apply(x.test, MARGIN = 1, FUN = '*', wt))
-    K <- as.matrix(kernelMatrix(kernel = kern, x = wx, y = wx.test))
+    wnewdata <- t(apply(newdata, MARGIN = 1, FUN = '*', wt))
+    K <- as.matrix(kernelMatrix(kernel = kern, x = wx, y = wnewdata))
   } else {
     kern <- model$data$kernel
 
-    if (is.matrix(kern)) {
-      if (missing(KernelMatrix)) {
-        K <- kern
-      } else {
-        K <- KernelMatrix
-      }
-    } else {
-      hyperparameter$sigma <- model$data$sigma[which.hyperparam]
-      K <- as.matrix(kernelMatrix(kernel = kern, x = model$data$x, y = x.test))
-    }
+    K <- as.matrix(kernelMatrix(kernel = kern, x = model$data$x, y = newdata))
   }
 
-  beta <- ifelse(is.null(fit$intercept), 0, fit$intercept)
+  # beta <- ifelse(is.null(fit$intercept), 0, fit$intercept)
   alpha <- fit$coefficient
   if (type == "link") {
-    pred <- beta + crossprod(K, alpha)
+    pred <- crossprod(K, alpha)
   } else {
     if (type == "response") {
-      pred <- exp(beta + crossprod(K, alpha))
+      pred <- exp(crossprod(K, alpha))
     } else {
       pred <- NULL
     }

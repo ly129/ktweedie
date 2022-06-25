@@ -1,4 +1,4 @@
-useDynLib("ktweedie")
+useDynLib("ktweedie", .registration = TRUE)
 
 import("methods")
 

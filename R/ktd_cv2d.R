@@ -1,4 +1,4 @@
-#' Cross validation for jointly tuning the regularization coefficient and kernel parameter in the ktweedie Model
+#' Cross validation for jointly tuning the regularization coefficient and kernel parameter in the Kernel Tweedie Model
 #'
 #' \code{ktd_cv2d()} performs 2-dimensional random search to determine the regularization coefficient and kernel parameter of the \code{ktweedie} model.
 #'

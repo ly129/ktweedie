@@ -26,9 +26,9 @@ ktd_estimate(
 
 \item{y}{Outcome vector (e.g. insurance cost).}
 
-\item{kern}{Choice of kernel. See \code{\link{dots}} for details on supported kernel functions. It can also simply be a matrix for the {ktweedie}.}
+\item{kern}{Choice of kernel. See \code{\link{dots}} for details on supported kernel functions.}
 
-\item{lam1}{A vector of candidate regularization coefficients used in cross-validation.}
+\item{lam1}{A vector of regularization coefficients.}
 
 \item{rho}{The power parameter of the Tweedie model. Default is 1.5 and can take any real value between 1 and 2.}
 
@@ -51,15 +51,38 @@ ktd_estimate(
 \item{verbose}{Logical indicating whether to show details of each update.}
 }
 \description{
-\code{ktd_estimate()} estimates the coefficients of the \code{ktweedie} and the \code{sktweedie} model (s for sparse). The latter has an integrated feature selection component that induces sparsity by applying weights on the features and penalizing the weights.
+\code{ktd_estimate()} estimates the coefficients of the Kernel Tweedie model \code{ktweedie} and the sparse kernel Tweedie model \code{sktweedie}. The latter has an integrated feature selection component that induces sparsity by applying weights on the features and penalizing the weights.
 }
 \details{
 \code{ktd_estimate()} stops when the absolute difference between the objective function values of the last two updates is smaller than \code{ftol}, or the sum of absolute differences between the coefficients of the last two updates is smaller than \code{partol}, before \code{maxit} is reached.
 }
 \examples{
+###### ktweedie ######
 lam1.seq <- c(1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1)
-( fit <- ktd_estimate(x = x, y = y,
-                      kern = rbfdot(sigma = 1e-8),
-                      lam1 = lam1.seq) )
+fit <- ktd_estimate(x = dat$x, y = dat$y,
+                    kern = rbfdot(sigma = 1e-8),
+                    lam1 = lam1.seq)
+###### sktweedie ######
+\dontrun{# use ktd_cv2d to tune lam1 and sigma in the rbfdot()
+cv2d <- ktd_cv2d(x = dat$x, y = dat$y,
+                 kernfunc = rbfdot,
+                 lambda = c(1e-5, 1e1),
+                 sigma = c(1e-5, 1e1),
+                 ncoefs = 10)
+# Set sparsity to TRUE and a lam2 to control the level of sparsity
+# Decrease lam2 if "WARNING: All weights are zero..."
+fit.sparse <- ktd_estimate(x = dat$x, y = dat$y,
+                           kern = rbfdot(sigma = cv2d$Best_sigma),
+                           lam1 = cv2d$Best_lambda,
+                           sparsity = TRUE,
+                           lam2 = 6,
+                           innerpartol = 1e-4,
+                           verbose = TRUE)
+# variables with fitted weight equal to 0 are not selected
+var_weights <- fit.sparse$estimates[[1]]$weight
+plot(var_weights)   # First 5 variables are significant in data generation.}
 
+}
+\seealso{
+\code{\link{ktd_cv}}, \code{\link{ktd_cv2d}}, \code{\link{ktd_predict}}
 }

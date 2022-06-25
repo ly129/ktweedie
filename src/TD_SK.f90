@@ -117,9 +117,9 @@ subroutine td_sk(N, p, x, y, lambda1, lambda2, sigmas, nval, rho,&
 
         ! print initialization
         if (verbose) then
-            ! call dblepr("-----Initialization for lambda 1-----", -1, lam1, 1)
-            call dblepr("----- Initial update for lambda 2 -----", -1, lam2, 1)
-            ! call dblepr("----- Initialization for sigma -----", -1, sigma, 1)
+            call dblepr("lambda 1 = ", -1, lam1, 1)
+            call dblepr("lambda 2 = ", -1, lam2, 1)
+            call dblepr("sigma = ", -1, sigma, 1)
         end if
 
         ! Initial parameter update

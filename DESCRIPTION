@@ -1,10 +1,13 @@
 Package: ktweedie
 Title: Tweedie compound Poisson model in the reproducing kernel Hilbert space
-Version: 0.0.0.9000
+Version: 1.0.0
+Date: 2022-06-24
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    c(person("Yi", "Lian", role = c("aut", "cre"), email = "yi.lian@mail.mcgill.ca"),
+      person("Yi", "Yang", role = c("aut", "cph")),
+      person("Robert W.", "Platt", role = c("aut"))
+     )
+Description: Fast estimation and prediction of insurance cost using the kernel Tweedie compound poisson gamma model. The package supports choice of different kernels and built-in cross-validation tools.
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
