@@ -1,2 +1,4 @@
 ^ktweedie\.Rproj$
 ^\.Rproj\.user$
+^\data-raw$
+^data-raw$
