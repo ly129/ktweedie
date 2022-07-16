@@ -54,6 +54,9 @@ A list of three items.
 }
 \examples{
 ### Cross-validation
+# Provide the function name (instead of the kernel function object, e.g. rbfdot(sigma = 1)) to the argument kernfunc.
+# Provide ranges where the candidate lambdas and sigmas are drawn from to the arguments lambda and sigma.
+# The number of pairs of candidate values to select from is specified by ncoefs.
 ( cv2d <- ktd_cv2d(x = dat$x, y = dat$y,
                    kernfunc = rbfdot,
                    lambda = c(1e-10, 1e0),

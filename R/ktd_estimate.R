@@ -7,8 +7,8 @@
 #' @param kern Choice of kernel. See \code{\link{dots}} for details on supported kernel functions.
 #' @param lam1 A vector of regularization coefficients.
 #' @param rho The power parameter of the Tweedie model. Default is 1.5 and can take any real value between 1 and 2.
-#' @param ftol Stopping criterion based on the absolute change in the objective function values from that of the previous iteration. Default is 1e-8.
-#' @param partol Stopping criterion based on the L2 norm of the change in the coefficient values from the previous iteration. Default is 1e-8.
+#' @param ftol Stopping criterion based on objective function value. Default is 1e-8. See Details.
+#' @param partol Stopping criterion based on the coefficient values. Default is 1e-8. See Details.
 #' @param abstol Stopping criterion based on absolute value of the objective function. Default is 0.
 #' @param maxit Maximum number of iterations.
 #' @param sparsity Logical If true, the \code{sktweedie} model with variable selection will be used. Default is false, for the \code{ktweedie} model.
@@ -22,13 +22,14 @@
 #' 2. \code{data}: stores the inputs, including the predictor matrix, the kernel function used in the fitting and \code{lam1}.
 #' 3. \code{sparsity}: a logical variable indicating whether the \code{ktweedie} or \code{sktweedie} is fitted.
 #' @details
-#' \code{ktd_estimate()} stops when the absolute difference between the objective function values of the last two updates is smaller than \code{ftol}, or the sum of absolute differences between the coefficients of the last two updates is smaller than \code{partol}, before \code{maxit} is reached. For the \code{sktweedie} model, there are inner loops for the update of kernel regression coefficients and regularization weights. The \code{innerpartol} and \code{innermaxit} arguments are the counterparts of \code{partol} and \code{maxit} for the inner loops.
+#' \code{ktd_estimate()} stops when the absolute difference between the objective function values of the last two updates is smaller than \code{ftol}, or the sum of absolute differences between the coefficients of the last two updates is smaller than \code{partol}, or the objective function values is below \code{abstol}, before \code{maxit} is reached. For the \code{sktweedie} model, there are inner loops for the update of kernel regression coefficients and regularization weights. The \code{innerpartol} and \code{innermaxit} arguments are the counterparts of \code{partol} and \code{maxit} for the inner loops.
 #'
-#' @seealso \code{\link{ktd_cv}}, \code{\link{ktd_cv2d}}, \code{\link{ktd_predict}}
+#' @seealso \code{\link{ktd_cv}}, \code{\link{ktd_cv2d}}, \code{\link{ktd_predict}}, \code{\link{rbfdot}}
 #'
 #' @examples
 #' ###### ktweedie ######
 #' # Provide a sequence of candidate values to the argument lam1.
+#' # Provide a kernel object to the argument kern.
 #' lam1.seq <- c(1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1)
 #' fit <- ktd_estimate(x = dat$x, y = dat$y,
 #'                     kern = rbfdot(sigma = 1e-8),
