@@ -18,6 +18,6 @@ data(dat)
 A simulated dataset with covariate matrix \code{x} of size 200 x 50 and an outcome vector \code{y} of length 200.
 }
 \details{
-\code{x} is generated from standard normal distribution. \code{y} is generated from Tweedie distribution with mean equal to exp(sin(x) \%*\% (6, -4, 3, 2, -2,0,...,0)).
+\code{x} is generated from standard normal distribution. \code{y} is generated from Tweedie distribution with mean equal to exp(sin(x) \%*\% (6, -4, 3, 2, -2,0,...,0)). Only the first five variables are associated with the outcome.
 }
 \keyword{datasets}

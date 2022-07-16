@@ -1,6 +1,6 @@
 #' Cross validation for tuning the regularization coefficient in the kernel Tweedie model
 #'
-#' \code{ktd_cv()} performs cross-validation to determine the regularization coefficient of the \code{ktweedie} model.
+#' \code{ktd_cv()} performs cross-validation to determine the optimal regularization coefficient of the \code{ktweedie} model.
 #'
 #' @param x Covariate matrix.
 #' @param y Outcome vector (e.g. insurance cost).
@@ -11,11 +11,16 @@
 #' @param loss Criterion used in cross-validation. "LL" for log likelihood, "RMSE" for root mean squared error, "MAD" for mean absolute difference. Default is "LL".
 #' @param ... Optional arguments to be passed to \code{\link{ktd_estimate}()}.
 #'
+#' @return A list of two items.
+#' 1. LL or RMSE or MAD: a vector of validation error based on the user-specified \code{loss}, named by the corresponding \code{lambda} values;
+#' 2. Best_lambda: the \code{lambda} value in the pair that generates the best loss;
 #' @details
 #' \code{ktd_cv()} is a built-in wrapper for cross-validation for the choice of regularization coefficient.
 #'
 #' @seealso \code{\link{ktd_cv2d}}, \code{\link{ktd_estimate}}, \code{\link{ktd_predict}}
 #' @examples
+#' # Provide a sequence of candidate values to the argument lambda.
+#' # ktd_cv() will perform cross-validation to determine which is the best.
 #' ( cv1d <- ktd_cv(x = dat$x, y = dat$y,
 #'                  kern = rbfdot(sigma = 1e-8),
 #'                  lambda = 10^(-8:-1),

@@ -1,5 +1,6 @@
 ## code to prepare `dat` dat goes here
 library(tweedie)
+set.seed(20220715)
 
 rand_tweedie<- function(mu,...) {
   Y <- rtweedie(1, mu = mu,...)

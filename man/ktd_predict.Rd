@@ -15,6 +15,9 @@ ktd_predict(model, newdata, which.lam1 = 1, type = "link")
 
 \item{type}{The type of prediction to be made - "\code{link}" for the linear predictor and "\code{response}" for the predicted outcome. Default is "\code{link}".}
 }
+\value{
+A list named \code{prediction} containing the vector of predicted outcomes.
+}
 \description{
 \code{ktd_predict()} predicts the outcome with fitted \code{ktweedie} or \code{sktweedie} model at the user supplied new data.
 }

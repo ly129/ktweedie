@@ -164,7 +164,7 @@ subroutine td_sk(N, p, x, y, lambda1, lambda2, sigmas, nval, rho,&
             ! if (verbose > -1) call intpr("Convergence situation", -1, conv, 1)
 
             if (conv>=7) then
-                call intpr("Inner weight loop terminated at max iteration:", -1, iter, 1)
+                ! call intpr("Inner weight loop terminated at max iteration:", -1, iter, 1)
                 exit
             end if
             ! if (wtac_size == 0) then

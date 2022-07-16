@@ -32,9 +32,9 @@ ktd_estimate(
 
 \item{rho}{The power parameter of the Tweedie model. Default is 1.5 and can take any real value between 1 and 2.}
 
-\item{ftol}{Stopping criterion based on objective function value. Default is 1e-8.}
+\item{ftol}{Stopping criterion based on the absolute change in the objective function values from that of the previous iteration. Default is 1e-8.}
 
-\item{partol}{Stopping criterion based on the coefficient values. Default is 1e-8.}
+\item{partol}{Stopping criterion based on the L2 norm of the change in the coefficient values from the previous iteration. Default is 1e-8.}
 
 \item{abstol}{Stopping criterion based on absolute value of the objective function. Default is 0.}
 
@@ -44,26 +44,36 @@ ktd_estimate(
 
 \item{lam2}{Regularization coefficient for the sparsity-inducing penalty in the \code{sktweedie} model.}
 
-\item{innerpartol}{Stopping criterion for the inner loops that update kernel parameters and weights based on the coefficient values.}
+\item{innerpartol}{Stopping criterion for the inner loops that update kernel parameters and weights based on the coefficient values. See Details.}
 
 \item{innermaxit}{Maximum number of iterations for the inner loops that update kernel parameters and variable weights. See Details.}
 
 \item{verbose}{Logical indicating whether to show details of each update.}
 }
+\value{
+A list of three items.
+\enumerate{
+\item \code{estimates}: a list containing the final objective function values and kernel Tweedie regression coefficients for each \code{lam1}.
+\item \code{data}: stores the inputs, including the predictor matrix, the kernel function used in the fitting and \code{lam1}.
+\item \code{sparsity}: a logical variable indicating whether the \code{ktweedie} or \code{sktweedie} is fitted.
+}
+}
 \description{
-\code{ktd_estimate()} estimates the coefficients of the Kernel Tweedie model \code{ktweedie} and the sparse kernel Tweedie model \code{sktweedie}. The latter has an integrated feature selection component that induces sparsity by applying weights on the features and penalizing the weights.
+\code{ktd_estimate()} estimates the coefficients of the kernel Tweedie model \code{ktweedie} and the sparse kernel Tweedie model \code{sktweedie}. The log of the expected Tweedie mean is modeled by a function in the reproducing kernel Hilbert space. The \code{sktweedie} has an integrated feature selection component that induces sparsity by applying weights on the features and penalizing the weights.
 }
 \details{
-\code{ktd_estimate()} stops when the absolute difference between the objective function values of the last two updates is smaller than \code{ftol}, or the sum of absolute differences between the coefficients of the last two updates is smaller than \code{partol}, before \code{maxit} is reached.
+\code{ktd_estimate()} stops when the absolute difference between the objective function values of the last two updates is smaller than \code{ftol}, or the sum of absolute differences between the coefficients of the last two updates is smaller than \code{partol}, before \code{maxit} is reached. For the \code{sktweedie} model, there are inner loops for the update of kernel regression coefficients and regularization weights. The \code{innerpartol} and \code{innermaxit} arguments are the counterparts of \code{partol} and \code{maxit} for the inner loops.
 }
 \examples{
 ###### ktweedie ######
+# Provide a sequence of candidate values to the argument lam1.
 lam1.seq <- c(1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1)
 fit <- ktd_estimate(x = dat$x, y = dat$y,
                     kern = rbfdot(sigma = 1e-8),
                     lam1 = lam1.seq)
 ###### sktweedie ######
-\dontrun{# use ktd_cv2d to tune lam1 and sigma in the rbfdot()
+\dontrun{
+# use ktd_cv2d to tune lam1 and sigma in the rbfdot()
 cv2d <- ktd_cv2d(x = dat$x, y = dat$y,
                  kernfunc = rbfdot,
                  lambda = c(1e-5, 1e1),
@@ -76,6 +86,7 @@ fit.sparse <- ktd_estimate(x = dat$x, y = dat$y,
                            lam1 = cv2d$Best_lambda,
                            sparsity = TRUE,
                            lam2 = 6,
+                           partol = 1e-4,
                            innerpartol = 1e-4,
                            verbose = TRUE)
 # variables with fitted weight equal to 0 are not selected

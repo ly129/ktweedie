@@ -1,35 +1,41 @@
 #' Estimate kernel Tweedie model coefficients
 #'
-#' \code{ktd_estimate()} estimates the coefficients of the Kernel Tweedie model \code{ktweedie} and the sparse kernel Tweedie model \code{sktweedie}. The latter has an integrated feature selection component that induces sparsity by applying weights on the features and penalizing the weights.
+#' \code{ktd_estimate()} estimates the coefficients of the kernel Tweedie model \code{ktweedie} and the sparse kernel Tweedie model \code{sktweedie}. The log of the expected Tweedie mean is modeled by a function in the reproducing kernel Hilbert space. The \code{sktweedie} has an integrated feature selection component that induces sparsity by applying weights on the features and penalizing the weights.
 #'
 #' @param x Covariate matrix.
 #' @param y Outcome vector (e.g. insurance cost).
 #' @param kern Choice of kernel. See \code{\link{dots}} for details on supported kernel functions.
 #' @param lam1 A vector of regularization coefficients.
 #' @param rho The power parameter of the Tweedie model. Default is 1.5 and can take any real value between 1 and 2.
-#' @param ftol Stopping criterion based on objective function value. Default is 1e-8.
-#' @param partol Stopping criterion based on the coefficient values. Default is 1e-8.
+#' @param ftol Stopping criterion based on the absolute change in the objective function values from that of the previous iteration. Default is 1e-8.
+#' @param partol Stopping criterion based on the L2 norm of the change in the coefficient values from the previous iteration. Default is 1e-8.
 #' @param abstol Stopping criterion based on absolute value of the objective function. Default is 0.
 #' @param maxit Maximum number of iterations.
 #' @param sparsity Logical If true, the \code{sktweedie} model with variable selection will be used. Default is false, for the \code{ktweedie} model.
 #' @param lam2 Regularization coefficient for the sparsity-inducing penalty in the \code{sktweedie} model.
-#' @param innerpartol Stopping criterion for the inner loops that update kernel parameters and weights based on the coefficient values.
+#' @param innerpartol Stopping criterion for the inner loops that update kernel parameters and weights based on the coefficient values. See Details.
 #' @param innermaxit Maximum number of iterations for the inner loops that update kernel parameters and variable weights. See Details.
 #' @param verbose Logical indicating whether to show details of each update.
 #'
+#' @returns A list of three items.
+#' 1. \code{estimates}: a list containing the final objective function values and kernel Tweedie regression coefficients for each \code{lam1}.
+#' 2. \code{data}: stores the inputs, including the predictor matrix, the kernel function used in the fitting and \code{lam1}.
+#' 3. \code{sparsity}: a logical variable indicating whether the \code{ktweedie} or \code{sktweedie} is fitted.
 #' @details
-#' \code{ktd_estimate()} stops when the absolute difference between the objective function values of the last two updates is smaller than \code{ftol}, or the sum of absolute differences between the coefficients of the last two updates is smaller than \code{partol}, before \code{maxit} is reached.
+#' \code{ktd_estimate()} stops when the absolute difference between the objective function values of the last two updates is smaller than \code{ftol}, or the sum of absolute differences between the coefficients of the last two updates is smaller than \code{partol}, before \code{maxit} is reached. For the \code{sktweedie} model, there are inner loops for the update of kernel regression coefficients and regularization weights. The \code{innerpartol} and \code{innermaxit} arguments are the counterparts of \code{partol} and \code{maxit} for the inner loops.
 #'
 #' @seealso \code{\link{ktd_cv}}, \code{\link{ktd_cv2d}}, \code{\link{ktd_predict}}
 #'
 #' @examples
 #' ###### ktweedie ######
+#' # Provide a sequence of candidate values to the argument lam1.
 #' lam1.seq <- c(1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1)
 #' fit <- ktd_estimate(x = dat$x, y = dat$y,
 #'                     kern = rbfdot(sigma = 1e-8),
 #'                     lam1 = lam1.seq)
 #' ###### sktweedie ######
-#' \dontrun{# use ktd_cv2d to tune lam1 and sigma in the rbfdot()
+#' \dontrun{
+#' # use ktd_cv2d to tune lam1 and sigma in the rbfdot()
 #' cv2d <- ktd_cv2d(x = dat$x, y = dat$y,
 #'                  kernfunc = rbfdot,
 #'                  lambda = c(1e-5, 1e1),
@@ -42,6 +48,7 @@
 #'                            lam1 = cv2d$Best_lambda,
 #'                            sparsity = TRUE,
 #'                            lam2 = 6,
+#'                            partol = 1e-4,
 #'                            innerpartol = 1e-4,
 #'                            verbose = TRUE)
 #' # variables with fitted weight equal to 0 are not selected
@@ -75,7 +82,7 @@ ktd_estimate <- function(x, y, kern, lam1, rho = 1.5,
   if (sparsity) {
 
     # only rbf kernel supported in sparse kernel
-    if (class(kern) != "rbfkernel") stop("Only RBF kernel is supported in sparse kernel feature. 'kern' has to be a 'rbfkernel' class.")
+    if (!is(kern, "rbfkernel")) stop("Only RBF kernel is supported in sparse kernel feature. 'kern' has to be a 'rbfkernel' class.")
 
     # number of sigmas
     sigma <- kern@kpar$sigma

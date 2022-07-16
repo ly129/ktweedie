@@ -23,13 +23,22 @@ ktd_cv(x, y, kern, lambda, nfolds = 5, rho = 1.5, loss = "LL", ...)
 
 \item{...}{Optional arguments to be passed to \code{\link{ktd_estimate}()}.}
 }
+\value{
+A list of two items.
+\enumerate{
+\item LL or RMSE or MAD: a vector of validation error based on the user-specified \code{loss}, named by the corresponding \code{lambda} values;
+\item Best_lambda: the \code{lambda} value in the pair that generates the best loss;
+}
+}
 \description{
-\code{ktd_cv()} performs cross-validation to determine the regularization coefficient of the \code{ktweedie} model.
+\code{ktd_cv()} performs cross-validation to determine the optimal regularization coefficient of the \code{ktweedie} model.
 }
 \details{
 \code{ktd_cv()} is a built-in wrapper for cross-validation for the choice of regularization coefficient.
 }
 \examples{
+# Provide a sequence of candidate values to the argument lambda.
+# ktd_cv() will perform cross-validation to determine which is the best.
 ( cv1d <- ktd_cv(x = dat$x, y = dat$y,
                  kern = rbfdot(sigma = 1e-8),
                  lambda = 10^(-8:-1),

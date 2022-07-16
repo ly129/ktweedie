@@ -5,8 +5,8 @@ subroutine td_bfgs(N, K, y, lamreg, nlam, sk, initp, rho, ftol, partol, abstol,&
     integer, intent(in) :: N ! sample size
     double precision, dimension (N, N), intent(in) :: K ! kernel matrix
     double precision, dimension (N), intent(in) :: y ! outcome variable
-    double precision, dimension (nlam), intent(in) :: lamreg    ! equals 1 when called by td_sk
     integer, intent(in) :: nlam ! number of lambdas - length of lamreg
+    double precision, dimension (nlam), intent(in) :: lamreg    ! equals 1 when called by td_sk
     logical, intent(in) :: sk  ! flag for whether td_bfgs is used for td_sk
     double precision, dimension (N), intent(in) :: initp   ! initial value of param
     double precision, intent(in) :: rho ! index parameter in tweedie distribution

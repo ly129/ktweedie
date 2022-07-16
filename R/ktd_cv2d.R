@@ -1,6 +1,6 @@
 #' Cross validation for jointly tuning the regularization coefficient and kernel parameter in the Kernel Tweedie Model
 #'
-#' \code{ktd_cv2d()} performs 2-dimensional random search to determine the regularization coefficient and kernel parameter of the \code{ktweedie} model.
+#' \code{ktd_cv2d()} performs 2-dimensional random search from a user-specified range to determine the optimal pair of regularization coefficient and kernel parameter of the \code{ktweedie} model.
 #'
 #' @param x Covariate matrix.
 #' @param y Outcome vector (e.g. insurance cost).
@@ -17,9 +17,9 @@
 #' \code{ktd_cv2d()} is a built-in wrapper for 2D random search for the regularization coefficient and kernel parameter. For kernel functions with greater than one parameters, \code{ktd_cv2d()} supports the tuning of the first one.
 #'
 #' @return A list of three items.
-#' 1. LL or RMSE or MAD: A vector of validation error based on the user-specified \code{loss}, named by the corresponding \code{lambda} and \code{sigma} values;
-#' 2. Best_lambda: The \code{lambda} value in the pair that generates the best loss;
-#' 3. Best_sigma: The \code{sigma} value in the pair that generates the best loss.
+#' 1. LL or RMSE or MAD: a vector of validation error based on the user-specified \code{loss}, named by the corresponding \code{lambda} and \code{sigma} values;
+#' 2. Best_lambda: the \code{lambda} value in the pair that generates the best loss;
+#' 3. Best_sigma: the \code{sigma} value in the pair that generates the best loss.
 #' @seealso \code{\link{ktd_cv}}, \code{\link{ktd_estimate}}, \code{\link{ktd_predict}}
 #' @examples
 #' ### Cross-validation

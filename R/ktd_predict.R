@@ -9,6 +9,7 @@
 #' @details
 #' \code{ktd_predict()} uses the fitted model from \code{\link{ktd_estimate}} to estimate the mean outcome for new data points.
 #'
+#' @returns A list named \code{prediction} containing the vector of predicted outcomes.
 #' @seealso \code{\link{ktd_estimate}}, \code{\link{ktd_cv}}, \code{\link{ktd_cv2d}}
 #'
 #' @examples
@@ -59,11 +60,12 @@ ktd_predict <- function(model, newdata, which.lam1 = 1, type = "link") {
   if (fit$convergence > 7) {
     return(NULL)
   } else {
-    return(list(prediction = pred,
-                fit = fit,
-                hyperparameter = hyperparameter,
-                kernel = kern,
-                kernel.matrix = K))
+    return(list(prediction = pred))
+                # ,
+                # fit = fit,
+                # hyperparameter = hyperparameter,
+                # kernel = kern,
+                # kernel.matrix = K))
   }
 
 
