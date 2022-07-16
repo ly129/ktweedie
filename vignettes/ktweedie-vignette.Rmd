@@ -31,6 +31,18 @@ where $K(\mathbf{w})_{ij}=K(\mathbf{w \odot x}_i, \mathbf{w \odot x}_j)$ involve
 
 # Installation
 
+From the CRAN.
+
+```{r cran, eval=FALSE}
+install.packages("ktweedie")
+```
+
+From the Github.
+
+```{r install_git, eval=FALSE}
+devtools::install_github("ly129/ktweedie")
+```
+
 # Quick Start
 
 First we load the `ktweedie` package:
@@ -156,7 +168,7 @@ data.frame(ktweedie = ktd.pred.new$prediction,
            sktweedie = sktd.pred.new$prediction)
 ```
 
-## Variable Selection 
+## Variable Selection
 
 In practice, the variable selection results of the `sktweedie` is more meaningful. An effective way to fit the `sktweedie` is to start with an arbitrarily big `lam2` that sets all weights to zero and gradually decrease its value.
 
