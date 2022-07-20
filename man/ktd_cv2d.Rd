@@ -47,7 +47,7 @@ A list of three items.
 }
 }
 \description{
-\code{ktd_cv2d()} performs 2-dimensional random search from a user-specified range to determine the optimal pair of regularization coefficient and kernel parameter of the \code{ktweedie} model.
+\code{ktd_cv2d()} performs 2-dimensional random search from user-specified ranges to determine the optimal pair of regularization coefficient and kernel parameter of the \code{ktweedie} model.
 }
 \details{
 \code{ktd_cv2d()} is a built-in wrapper for 2D random search for the regularization coefficient and kernel parameter. For kernel functions with greater than one parameters, \code{ktd_cv2d()} supports the tuning of the first one.

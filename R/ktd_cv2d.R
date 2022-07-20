@@ -1,6 +1,6 @@
 #' Cross validation for jointly tuning the regularization coefficient and kernel parameter in the Kernel Tweedie Model
 #'
-#' \code{ktd_cv2d()} performs 2-dimensional random search from a user-specified range to determine the optimal pair of regularization coefficient and kernel parameter of the \code{ktweedie} model.
+#' \code{ktd_cv2d()} performs 2-dimensional random search from user-specified ranges to determine the optimal pair of regularization coefficient and kernel parameter of the \code{ktweedie} model.
 #'
 #' @param x Covariate matrix.
 #' @param y Outcome vector (e.g. insurance cost).

@@ -13,11 +13,15 @@
 #' @seealso \code{\link{ktd_estimate}}, \code{\link{ktd_cv}}, \code{\link{ktd_cv2d}}
 #'
 #' @examples
+#' # Fit a ktweedie model
 #' fit <- ktd_estimate(x = dat$x, y = dat$y,
 #'                     kern = rbfdot(sigma = 1e-6),
 #'                     lam1 = 10^(-5:1))
+#' # Generate newx at which predictions are to be made.
+#' # The newdata should have the same dimension as the original trainig data.
 #' newx <- matrix(rnorm(10 * ncol(dat$x)), nrow = 10)
-#' pred <- ktd_predict(model = fit, newdata = newx, which.lam1 = 3, type = "link")
+#' pred <- ktd_predict(model = fit, newdata = newx,
+#'                     which.lam1 = 3, type = "link")
 #' @export
 #'
 #'
