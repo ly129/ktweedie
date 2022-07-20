@@ -75,7 +75,7 @@ subroutine fn_grad(N, K, y, param, lambda, rho, Ka, fn, gradf)
     ! Content
     call fn_grad_prep(N, K, param, rho, Ka, Kexp1, Kexp2)
     fn = 1.0d0/N * (dot_product(y, Kexp1)/(rho - 1.0d0) + sum(Kexp2)/(2.0d0 - rho)) + lambda * dot_product(param, Ka)
-    gradf = 1.0d0/N * (matmul(K, (-y * Kexp1)) + matmul(K, Kexp2)) + 2.0d0 * lambda * Ka
+    gradf = 1.0d0/N * reshape(matmul(K, (-y * Kexp1)) + matmul(K, Kexp2), (/N/)) + 2.0d0 * lambda * Ka
 end subroutine fn_grad
 
 ! ----------------------------------------------------------------
