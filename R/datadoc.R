@@ -1,6 +1,6 @@
 #' A demo dataset
 #'
-#' A simulated dataset with covariate matrix \code{x} of size 200 x 50 and an outcome vector \code{y} of length 200.
+#' A simulated dataset with covariate matrix \code{x} of size 50 x 10 and an outcome vector \code{y} of length 50.
 #'
 #'
 #' @name dat

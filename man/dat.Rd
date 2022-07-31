@@ -15,7 +15,7 @@ A list with 2 items:
 data(dat)
 }
 \description{
-A simulated dataset with covariate matrix \code{x} of size 200 x 50 and an outcome vector \code{y} of length 200.
+A simulated dataset with covariate matrix \code{x} of size 50 x 10 and an outcome vector \code{y} of length 50.
 }
 \details{
 \code{x} is generated from standard normal distribution. \code{y} is generated from Tweedie distribution with mean equal to exp(sin(x) \%*\% (6, -4, 3, 2, -2,0,...,0)). Only the first five variables are associated with the outcome.
