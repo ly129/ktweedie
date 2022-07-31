@@ -142,7 +142,8 @@ str(ktd.fit$estimates)
 For the `sktweedie`, only the Gaussian radial basis function (RBF) kernel `rbfdot()` is supported. We recommend using the same set of tuned parameters as if a `ktweedie` model is fitted and tuning `lam2` manually:
 
 ```{r sktd_fit, cache = TRUE}
-sktd.cv2d <- ktd_cv2d(x = x, y = y,
+sktd.cv2d <- ktd_cv2d(x = x,
+                      y = y,
                       kernfunc = rbfdot,
                       lambda = c(1e-3, 1e0),
                       sigma = c(1e-3, 1e0),
@@ -150,7 +151,8 @@ sktd.cv2d <- ktd_cv2d(x = x, y = y,
                       ncoefs = 10,
                       loss = "LL")
 
-sktd.fit <- ktd_estimate(x = x, y = y,
+sktd.fit <- ktd_estimate(x = x,
+                         y = y,
                          kern = rbfdot(sigma = sktd.cv2d$Best_sigma),
                          lam1 = sktd.cv2d$Best_lambda,
                          sparsity = TRUE,
