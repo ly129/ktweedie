@@ -4,7 +4,9 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/ly129/ktweedie/workflows/R-CMD-check/badge.svg)](https://github.com/ly129/ktweedie/actions)
-<!-- badges: end --> \## Introduction
+<!-- badges: end -->
+
+## Introduction
 
 `ktweedie` is a package that fits nonparametric Tweedie compound Poisson
 gamma models in the reproducing kernel Hilbert space. The package is

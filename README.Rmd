@@ -12,7 +12,8 @@ set.seed(20220718)
 # `ktweedie`: Kernel-based Tweedie compound Poisson gamma model using high-dimensional covariates for the analyses of zero-inflated response variables.
 <!-- badges: start -->
   [![R-CMD-check](https://github.com/ly129/ktweedie/workflows/R-CMD-check/badge.svg)](https://github.com/ly129/ktweedie/actions)
-  <!-- badges: end -->
+<!-- badges: end -->
+
 ## Introduction
 
 `ktweedie` is a package that fits nonparametric Tweedie compound Poisson gamma models in the reproducing kernel Hilbert space. The package is based on two algorithms, the `ktweedie` for kernel-based Tweedie model and the `sktweedie` for sparse kernel-based Tweedie model. The `ktweedie` supports a wide range of kernel functions implemented in the `R` package `kernlab` and the optimization algorithm is a Broyden--Fletcher--Goldfarb--Shanno (BFGS) algorithm with bisection line search. The package includes cross-validation functions for one-dimensional tuning of the kernel regularization parameter $\lambda$ and for two-dimensional joint tuning of one kernel parameter and $\lambda$. The `sktweedie` uses variable weights to achieve variable selection. It is a meta-algorithm that alternatively updates the kernel parameters and a set of variable weights.
