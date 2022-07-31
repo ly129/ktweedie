@@ -1,5 +1,10 @@
 
-# Introduction
+# `ktweedie`: Kernel-based Tweedie compound Poisson gamma model using high-dimensional covariates for the analyses of zero-inflated response variables.
+
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/ly129/ktweedie/workflows/R-CMD-check/badge.svg)](https://github.com/ly129/ktweedie/actions)
+<!-- badges: end --> \## Introduction
 
 `ktweedie` is a package that fits nonparametric Tweedie compound Poisson
 gamma models in the reproducing kernel Hilbert space. The package is
@@ -60,13 +65,12 @@ where
 involves variable weights
 ![\mathbf w](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cmathbf%20w "\mathbf w").
 
-# Installation
+## Installation
 
-From the CRAN.
-
-``` r
-install.packages("ktweedie")
-```
+<!-- From the CRAN. -->
+<!-- ```{r cran, eval=FALSE} -->
+<!-- install.packages("ktweedie") -->
+<!-- ``` -->
 
 From the Github.
 
@@ -74,7 +78,7 @@ From the Github.
 devtools::install_github("ly129/ktweedie")
 ```
 
-# Quick Start
+### Quick Start
 
 First we load the `ktweedie` package:
 
@@ -170,7 +174,7 @@ fit.sktd$estimates[[1]]$weight
 
 Variables with weights close to 0 can be viewed as noise variables.
 
-# Recommended Data Analysis Pipeline
+## Recommended Data Analysis Pipeline
 
 The `ktweedie` and `sktweedie` algorithms require careful tuning of one
 to multiple hyperparameters, depending on the choice of kernel
@@ -189,7 +193,7 @@ laplacedot(sigma = 1)
 #>  Hyperparameter : sigma =  1
 ```
 
-## Cross-validation
+### Cross-validation
 
 The one-dimensional search for the optimal `lam1`, can be achieved with
 the `ktd_cv()` function from a user-specified vector of candidate
@@ -248,7 +252,7 @@ ktd.cv2d
 #> [1] 0.273254
 ```
 
-## Fitting
+### Fitting
 
 Then the model is fitted using the hyperparameter(s) selected by the
 `ktd_cv` or `ktd_cv2d`. In the example below, the selected `lam1` and
@@ -293,7 +297,7 @@ sktd.fit <- ktd_estimate(x = x, y = y,
                          innerpartol = 1e-5)
 ```
 
-## Prediction
+### Prediction
 
 The function `ktd_predict()` can identify necessary information stored
 in `ktd.fit$data` and `sktd.fit$data` to make predictions at the
@@ -336,7 +340,7 @@ data.frame(ktweedie = ktd.pred.new$prediction,
 #> 6   9.230015  73.05495
 ```
 
-## Variable Selection
+### Variable Selection
 
 In practice, the variable selection results of the `sktweedie` is more
 meaningful. An effective way to fit the `sktweedie` is to start with an
@@ -380,5 +384,3 @@ legend("topright",
 ```
 
 ![](README_files/figure-gfm/solution-path-1.png)<!-- -->
-
-## 

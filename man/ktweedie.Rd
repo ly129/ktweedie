@@ -5,7 +5,7 @@
 \alias{ktweedie}
 \title{ktweedie Package}
 \description{
-Fast estimation and prediction of insurance cost using the Tweedie compound poisson gamma model in reproducing kernel Hilbert space. The package supports choice of different kernels and built-in cross-validation tools.
+Kernel-based Tweedie compound Poisson gamma model using high-dimensional covariates for the analyses of zero-inflated response variables. The package features built-in estimation, prediction and cross-validation tools and supports choice of different kernel functions.
 }
 \details{
 The ktweedie package includes functions \code{ktd_estimate}, \code{ktd_cv}, \code{ktd_cv2d} and \code{ktd_predict}.
