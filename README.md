@@ -93,7 +93,7 @@ The package includes a toy data for demonstration purpose. The
 predictor matrix `x` is generated from standard normal distribution and
 `y` is generated according to
 
-![y\sim \mathrm{Tweedie}(\mu=\sin(x\beta), \rho=1.5,\phi=0.5),](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;y%5Csim%20%5Cmathrm%7BTweedie%7D%28%5Cmu%3D%5Csin%28x%5Cbeta%29%2C%20%5Crho%3D1.5%2C%5Cphi%3D0.5%29%2C "y\sim \mathrm{Tweedie}(\mu=\sin(x\beta), \rho=1.5,\phi=0.5),")
+![y_i\sim \mathrm{Tweedie}(\mu=\sin(\mathbf{x_i}^\top\beta), \rho=1.5,\phi=0.5),](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;y_i%5Csim%20%5Cmathrm%7BTweedie%7D%28%5Cmu%3D%5Csin%28%5Cmathbf%7Bx_i%7D%5E%5Ctop%5Cbeta%29%2C%20%5Crho%3D1.5%2C%5Cphi%3D0.5%29%2C "y_i\sim \mathrm{Tweedie}(\mu=\sin(\mathbf{x_i}^\top\beta), \rho=1.5,\phi=0.5),")
 
 where
 ![\beta=(6, -4, 3, 2, -2, 0,\ldots,0)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cbeta%3D%286%2C%20-4%2C%203%2C%202%2C%20-2%2C%200%2C%5Cldots%2C0%29 "\beta=(6, -4, 3, 2, -2, 0,\ldots,0)").
