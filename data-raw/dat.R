@@ -9,8 +9,8 @@ rand_tweedie<- function(mu,...) {
 
 phi <- 0.5
 rho <- 1.5
-P <- 50
-N <- 200
+P <- 10
+N <- 50
 beta.true <- c(6, -4, 3, 2, -2, rep(0, P-5))
 
 x <- matrix(rnorm(N * P), N, P)
