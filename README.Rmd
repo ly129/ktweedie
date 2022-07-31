@@ -1,0 +1,220 @@
+---
+output: github_document
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+set.seed(20220718)
+```
+
+# Introduction
+
+`ktweedie` is a package that fits nonparametric Tweedie compound Poisson gamma models in the reproducing kernel Hilbert space. The package is based on two algorithms, the `ktweedie` for kernel-based Tweedie model and the `sktweedie` for sparse kernel-based Tweedie model. The `ktweedie` supports a wide range of kernel functions implemented in the `R` package `kernlab` and the optimization algorithm is a Broyden--Fletcher--Goldfarb--Shanno (BFGS) algorithm with bisection line search. The package includes cross-validation functions for one-dimensional tuning of the kernel regularization parameter $\lambda$ and for two-dimensional joint tuning of one kernel parameter and $\lambda$. The `sktweedie` uses variable weights to achieve variable selection. It is a meta-algorithm that alternatively updates the kernel parameters and a set of variable weights.
+
+The `ktweedie` solves the problem $$ 
+\min_{\boldsymbol{\alpha}}\left\{ -\sum_{i=1}^{n}\frac{1}{\phi}\left(\frac{y_{i}e^{(1-\rho)\mathbf{K}_{i}^{\top}\boldsymbol{\alpha}}}{1-\rho}-\frac{e^{(2-\rho)\mathbf{K}_{i}^{\top}\boldsymbol{\alpha}}}{2-\rho}\right)+\lambda\boldsymbol{\alpha}^{\top}\mathbf{K}\boldsymbol{\alpha}\right\} ,
+$$where $\rho\in(1,2)$ is the index parameter, $\phi>0$ is the dispersion parameter, $\mathbf{K}$ is an $n\times n$ kernel matrix computed according to the user-specified kernel function $K(\cdot ,\cdot)$, whose entries are $K_{ij}=K(\mathbf{x}_i, \mathbf{x}_j)$ are calculated based on the $p$-dimensional predictors from subjects $i,j=1,\ldots,n$. In the kernel-based Tweedie model, the mean parameter $\mu_i$ for the $i$-th observation is modelled by $$\mu_i=\log(\mathbb{E}(Y_i|\mathbf{x_i}))=\sum_{j=1}^n \alpha_j K(\mathbf x_{i}, \mathbf x_j).$$
+
+The `sktweedie` solves$$
+\begin{aligned}
+&\min_{\boldsymbol{\alpha}, \mathbf{w}}\left\{ -\sum_{i=1}^{n}\frac{1}{\phi}\left(\frac{y_{i}e^{(1-\rho)\mathbf{K(w)}_{i}^{\top}\boldsymbol{\alpha}}}{1-\rho}-\frac{e^{(2-\rho)\mathbf{K(w)}_{i}^{\top}\boldsymbol{\alpha}}}{2-\rho}\right)+\lambda_1\boldsymbol{\alpha}^{\top}\mathbf{K(w)}\boldsymbol{\alpha} +\lambda_2 \mathbf{1}^\top \mathbf{w} \right \}\\
+& \qquad \qquad \mathrm{s.t.\ \ \ } w_j\in [0,1],\ j=1,\ldots,p,
+\end{aligned}$$
+
+where $K(\mathbf{w})_{ij}=K(\mathbf{w \odot x}_i, \mathbf{w \odot x}_j)$ involves variable weights $\mathbf w$.
+
+# Installation
+
+From the CRAN.
+
+```{r cran, eval=FALSE}
+install.packages("ktweedie")
+```
+
+From the Github.
+
+```{r install_git, eval=FALSE}
+devtools::install_github("ly129/ktweedie")
+```
+
+# Quick Start
+
+First we load the `ktweedie` package:
+
+```{r setup}
+library(ktweedie)
+```
+
+The package includes a toy data for demonstration purpose. The $50\times10$ predictor matrix `x` is generated from standard normal distribution and `y` is generated according to$$y\sim \mathrm{Tweedie}(\mu=\sin(x\beta), \rho=1.5,\phi=0.5),$$where $\beta=(6, -4, 3, 2, -2, 0,\ldots,0)$. That said, only the first five predictors are associated with the response.
+
+```{r data, cache = TRUE}
+data(dat)
+x <- dat$x
+y <- dat$y
+```
+
+An input matrix `x` and an output vector `y` are now loaded. The `ktd_estimate()` function can be used to fit a basic `ktweedie` model. The regularization parameter `lam1` can be a vector, which will be solved in a decreasing order with warm start.
+
+```{r ktd_estimate1, cache = TRUE}
+fit.ktd <- ktd_estimate(x = x,
+                        y = y,
+                        kern = rbfdot(sigma = 0.1),
+                        lam1 = c(0.01, 0.1, 1))
+str(fit.ktd$estimates)
+```
+
+`fit.ktd$estimates` stores the estimated coefficients and the final objective function value. The estimated kernel-based model coefficients for the $l$-th `lam1` can be accessed by the index `l`: `fit.ktd$estimates[[l]]$coefficient`.
+
+The function can also be used to fit the `sktweedie` model by setting the argument `sparsity` to `TRUE`, and specifying the regularization coefficient $\lambda_2$ in the argument `lam2`.
+
+```{r sktd_est, cache = TRUE}
+fit.sktd <- ktd_estimate(x = x,
+                         y = y,
+                         kern = rbfdot(sigma = 0.1),
+                         lam1 = 1,
+                         sparsity = TRUE,
+                         lam2 = 1)
+```
+
+And we can access the fitted coefficients in a similar manner to the `fit.ktd`. Additionally, the fitted variable weights $\mathbf w$ can be accessed by
+
+```{r sktd_wts, cache=TRUE}
+fit.sktd$estimates[[1]]$weight
+```
+
+Variables with weights close to 0 can be viewed as noise variables.
+
+# Recommended Data Analysis Pipeline
+
+The `ktweedie` and `sktweedie` algorithms require careful tuning of one to multiple hyperparameters, depending on the choice of kernel functions. For the `ktweedie`, we recommend either a one-dimensional tuning for `lam1` ($\lambda_1$) or a two-dimensional random search for `lam1` and the kernel parameter using cross-validation. Tuning is achieved by optimizing a user-specified criterion, including log likelihood `loss = "LL"`, mean absolute difference `loss = "MAD"` and root mean squared error `loss = "RMSE"`. Using the Laplacian kernel as an example.
+
+```{r laplace-kernel}
+laplacedot(sigma = 1)
+```
+
+## Cross-validation
+
+The one-dimensional search for the optimal `lam1`, can be achieved with the `ktd_cv()` function from a user-specified vector of candidate values:
+
+```{r one-d-cv, cache = TRUE}
+ktd.cv1d <- ktd_cv(x = x,
+                   y = y,
+                   kern = laplacedot(sigma = 0.01),
+                   lambda = c(0.001, 0.01, 0.1, 1, 10),
+                   nfolds = 5,
+                   loss = "LL")
+ktd.cv1d
+```
+
+The two-dimensional joint search for the optimal `lam1` and `sigma` requires `ktd_cv2d()`. In the example below, a total of `ncoefs = 10` pairs of candidate `lam1` and `sigma` values are randomly sampled (uniformly on the log scale) within the ranges `lambda = c(1e-5, 1e0)` and `sigma = c(1e-5, 1e0)`, respectively. Then the `nfolds = 5`-fold cross-validation is performed to select the pair that generates the optimal cross-validation `loss = "MAD"`.
+
+```{r two-d-cv, cache = TRUE}
+ktd.cv2d <- ktd_cv2d(x = x,
+                     y = y,
+                     kernfunc = laplacedot,
+                     lambda = c(1e-5, 1e0),
+                     sigma = c(1e-5, 1e0),
+                     nfolds = 5,
+                     ncoefs = 10,
+                     loss = "MAD")
+ktd.cv2d
+```
+
+## Fitting
+
+Then the model is fitted using the hyperparameter(s) selected by the `ktd_cv` or `ktd_cv2d`. In the example below, the selected `lam1` and `sigma` values are accessed by `ktd.cv2d$Best_lambda` and `ktd.cv2d$Best_sigma`, which are then be fed into the `ktd_estimate` to perform final model fitting.
+
+```{r ktd_fit, cache = TRUE}
+ktd.fit <- ktd_estimate(x = x,
+                        y = y,
+                        kern = laplacedot(sigma = ktd.cv2d$Best_sigma),
+                        lam1 = ktd.cv2d$Best_lambda)
+str(ktd.fit$estimates)
+```
+
+For the `sktweedie`, only the Gaussian radial basis function (RBF) kernel `rbfdot()` is supported. We recommend using the same set of tuned parameters as if a `ktweedie` model is fitted and tuning `lam2` manually:
+
+```{r sktd_fit, cache = TRUE}
+sktd.cv2d <- ktd_cv2d(x = x, y = y,
+                      kernfunc = rbfdot,
+                      lambda = c(1e-3, 1e0),
+                      sigma = c(1e-3, 1e0),
+                      nfolds = 5,
+                      ncoefs = 10,
+                      loss = "LL")
+
+sktd.fit <- ktd_estimate(x = x, y = y,
+                         kern = rbfdot(sigma = sktd.cv2d$Best_sigma),
+                         lam1 = sktd.cv2d$Best_lambda,
+                         sparsity = TRUE,
+                         lam2 = 1,
+                         ftol = 1e-3,
+                         partol = 1e-3,
+                         innerpartol = 1e-5)
+```
+
+## Prediction
+
+The function `ktd_predict()` can identify necessary information stored in `ktd.fit$data` and `sktd.fit$data` to make predictions at the user-specified `newdata`. If the argument `newdata` is unspecified, the prediction will be made at the original `x` used in model training and fitting.
+
+```{r fitting, cache = TRUE}
+ktd.pred <- ktd_predict(ktd.fit, type = "response")
+head(ktd.pred$prediction)
+```
+
+If `newdata` with the same dimension as `x` is provided, the prediction will be made at the new data points.
+
+```{r fitting_new, cache = TRUE}
+# Use a subset of the original x as newdata.
+newdata <- x[1:6,]
+ktd.pred.new <- ktd_predict(ktd.fit,
+                            newdata = newdata,
+                            type = "response")
+sktd.pred.new <- ktd_predict(sktd.fit,
+                             newdata = newdata,
+                             type = "response")
+data.frame(ktweedie = ktd.pred.new$prediction,
+           sktweedie = sktd.pred.new$prediction)
+```
+
+## Variable Selection
+
+In practice, the variable selection results of the `sktweedie` is more meaningful. An effective way to fit the `sktweedie` is to start with an arbitrarily big `lam2` that sets all weights to zero and gradually decrease its value. Note that a warning message is generated for the first `lam2`, suggesting that all weights are set to zero.
+
+```{r solution-path, cache = TRUE, fig.height = 8, fig.width = 8}
+nlam2 <- 15
+lam2.seq <- 3 * 0.9^(1:nlam2 - 1)
+wts <- matrix(NA, nrow = nlam2, ncol = ncol(x))
+for (i in 1:nlam2) {
+  sktd.tmp <- ktd_estimate(x = x,
+                           y = y,
+                           kern = rbfdot(sigma = sktd.cv2d$Best_sigma),
+                           lam1 = sktd.cv2d$Best_lambda,
+                           sparsity = TRUE,
+                           lam2 = lam2.seq[i],
+                           ftol = 1e-3,
+                           partol = 1e-3,
+                           innerpartol = 1e-5)
+  wt.tmp <- sktd.tmp$estimates[[1]]$weight
+  if (is.null(wt.tmp)) wts[i, ] <- 0 else wts[i, ] <- wt.tmp
+}
+# plot the solution path with graphics::matplot()
+matplot(y = wts,
+        x = lam2.seq,
+        type = "l",
+        log = "x",
+        ylab = "Weights",
+        xlab = expression(paste(lambda)),
+        lwd = 2)
+legend("topright",
+       title = "w index",
+       legend = 1:10,
+       lty = 1:5,
+       col = 1:6,
+       lwd = 2)
+```
+
+## 
