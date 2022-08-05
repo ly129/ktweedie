@@ -1,5 +1,5 @@
 Package: ktweedie
-Title: Tweedie Compound Poisson Model in the Reproducing Kernel Hilbert Space
+Title: 'Tweedie' Compound Poisson Model in the Reproducing Kernel Hilbert Space
 Version: 1.0.0
 Date: 2022-07-15
 Authors@R: 
@@ -9,7 +9,7 @@ Authors@R:
       person("Peng", "Shi", role = c("aut")),
       person("Robert W.", "Platt", role = c("aut"))
      )
-Description: Kernel-based Tweedie compound Poisson gamma model using high-dimensional covariates for the analyses of zero-inflated response variables. The package features built-in estimation, prediction and cross-validation tools and supports choice of different kernel functions.
+Description: Kernel-based 'Tweedie' compound Poisson gamma model using high-dimensional predictors for the analyses of zero-inflated response variables. The package features built-in estimation, prediction and cross-validation tools and supports choice of different kernel functions.
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -22,4 +22,3 @@ Suggests:
     rmarkdown,
     tweedie
 LazyData: true
-VignetteBuilder: knitr
