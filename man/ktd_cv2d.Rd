@@ -59,7 +59,7 @@ A list of three items.
 # Provide ranges where the candidate lambdas and sigmas are drawn from
 # to the arguments lambda and sigma.
 # The number of pairs of candidates to select from is specified by ncoefs.
-\dontrun{
+\donttest{
 cv2d <- ktd_cv2d(x = dat$x, y = dat$y,
                    kernfunc = rbfdot,
                    lambda = c(1e-10, 1e-5),
