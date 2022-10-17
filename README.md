@@ -1,12 +1,5 @@
 
-# `ktweedie`: Kernel-based Tweedie compound Poisson gamma model using high-dimensional covariates for the analyses of zero-inflated response variables.
-
-<!-- badges: start -->
-
-[![R-CMD-check](https://github.com/ly129/ktweedie/workflows/R-CMD-check/badge.svg)](https://github.com/ly129/ktweedie/actions)
-<!-- badges: end -->
-
-## Introduction
+# Introduction
 
 `ktweedie` is a package that fits nonparametric Tweedie compound Poisson
 gamma models in the reproducing kernel Hilbert space. The package is
@@ -67,7 +60,7 @@ where
 involves variable weights
 ![\mathbf w](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cmathbf%20w "\mathbf w").
 
-## Installation
+# Installation
 
 <!-- From the CRAN. -->
 <!-- ```{r cran, eval=FALSE} -->
@@ -80,7 +73,7 @@ From the Github.
 devtools::install_github("ly129/ktweedie")
 ```
 
-### Quick Start
+# Quick Start
 
 First we load the `ktweedie` package:
 
@@ -89,14 +82,14 @@ library(ktweedie)
 ```
 
 The package includes a toy data for demonstration purpose. The
-![50\times10](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;50%5Ctimes10 "50\times10")
+![30\times5](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;30%5Ctimes5 "30\times5")
 predictor matrix `x` is generated from standard normal distribution and
 `y` is generated according to
 
-![y_i\sim \mathrm{Tweedie}(\mu=\sin(\mathbf{x}\_i^\top\beta), \rho=1.5,\phi=0.5),](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;y_i%5Csim%20%5Cmathrm%7BTweedie%7D%28%5Cmu%3D%5Csin%28%5Cmathbf%7Bx%7D_i%5E%5Ctop%5Cbeta%29%2C%20%5Crho%3D1.5%2C%5Cphi%3D0.5%29%2C "y_i\sim \mathrm{Tweedie}(\mu=\sin(\mathbf{x}_i^\top\beta), \rho=1.5,\phi=0.5),")
+![y\sim \mathrm{Tweedie}(\mu=\sin(x\beta), \rho=1.5,\phi=0.5),](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;y%5Csim%20%5Cmathrm%7BTweedie%7D%28%5Cmu%3D%5Csin%28x%5Cbeta%29%2C%20%5Crho%3D1.5%2C%5Cphi%3D0.5%29%2C "y\sim \mathrm{Tweedie}(\mu=\sin(x\beta), \rho=1.5,\phi=0.5),")
 
 where
-![\beta=(6, -4, 3, 2, -2, 0,\ldots,0)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cbeta%3D%286%2C%20-4%2C%203%2C%202%2C%20-2%2C%200%2C%5Cldots%2C0%29 "\beta=(6, -4, 3, 2, -2, 0,\ldots,0)").
+![\beta=(6, -4, 0,\ldots,0)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cbeta%3D%286%2C%20-4%2C%200%2C%5Cldots%2C0%29 "\beta=(6, -4, 0,\ldots,0)").
 That said, only the first five predictors are associated with the
 response.
 
@@ -119,16 +112,16 @@ fit.ktd <- ktd_estimate(x = x,
 str(fit.ktd$estimates)
 #> List of 3
 #>  $ lambda 1   :List of 3
-#>   ..$ fn         : num 104
-#>   ..$ coefficient: num [1:50, 1] -0.0251 -0.0415 -0.0129 2.6421 -0.0273 ...
+#>   ..$ fn         : num 110
+#>   ..$ coefficient: num [1:30, 1] 0.5558 -0.062 -0.0381 0.0523 -0.0251 ...
 #>   ..$ convergence: int 0
 #>  $ lambda 0.1 :List of 3
-#>   ..$ fn         : num 43.7
-#>   ..$ coefficient: num [1:50, 1] -0.619 -0.417 -0.13 5.17 -0.433 ...
+#>   ..$ fn         : num 51
+#>   ..$ coefficient: num [1:30, 1] 1.662 -0.235 -0.177 0.867 -0.143 ...
 #>   ..$ convergence: int 0
 #>  $ lambda 0.01:List of 3
-#>   ..$ fn         : num 27.1
-#>   ..$ coefficient: num [1:50, 1] -3.51 -0.407 -0.577 6.905 -2.025 ...
+#>   ..$ fn         : num 39.2
+#>   ..$ coefficient: num [1:30, 1] 7.692 -0.49 -0.841 4.624 -0.696 ...
 #>   ..$ convergence: int 0
 ```
 
@@ -149,7 +142,7 @@ in the argument `lam2`.
 fit.sktd <- ktd_estimate(x = x,
                          y = y,
                          kern = rbfdot(sigma = 0.1),
-                         lam1 = 1,
+                         lam1 = 5,
                          sparsity = TRUE,
                          lam2 = 1)
 ```
@@ -161,22 +154,17 @@ can be accessed by
 
 ``` r
 fit.sktd$estimates[[1]]$weight
-#>            [,1]
-#>  [1,] 0.0000000
-#>  [2,] 0.5130585
-#>  [3,] 0.4477968
-#>  [4,] 0.0000000
-#>  [5,] 0.0000000
-#>  [6,] 0.0000000
-#>  [7,] 0.0000000
-#>  [8,] 0.0000000
-#>  [9,] 0.0000000
-#> [10,] 0.0000000
+#>           [,1]
+#> [1,] 1.0000000
+#> [2,] 0.4462078
+#> [3,] 0.0000000
+#> [4,] 0.0000000
+#> [5,] 0.0000000
 ```
 
 Variables with weights close to 0 can be viewed as noise variables.
 
-## Recommended Data Analysis Pipeline
+# Recommended Data Analysis Pipeline
 
 The `ktweedie` and `sktweedie` algorithms require careful tuning of one
 to multiple hyperparameters, depending on the choice of kernel
@@ -195,7 +183,7 @@ laplacedot(sigma = 1)
 #>  Hyperparameter : sigma =  1
 ```
 
-### Cross-validation
+## Cross-validation
 
 The one-dimensional search for the optimal `lam1`, can be achieved with
 the `ktd_cv()` function from a user-specified vector of candidate
@@ -204,14 +192,14 @@ values:
 ``` r
 ktd.cv1d <- ktd_cv(x = x,
                    y = y,
-                   kern = laplacedot(sigma = 0.01),
-                   lambda = c(0.001, 0.01, 0.1, 1, 10),
+                   kern = laplacedot(sigma = 0.1),
+                   lambda = c(0.0001, 0.001, 0.01, 0.1, 1),
                    nfolds = 5,
                    loss = "LL")
 ktd.cv1d
 #> $LL
-#>         10          1        0.1       0.01      0.001 
-#> -144.85678  -69.57901  -60.40564  -59.45742  -77.00390 
+#>         1       0.1      0.01     0.001     1e-04 
+#> -82.30040 -60.33054 -55.68177 -55.68835 -65.38823 
 #> 
 #> $Best_lambda
 #> [1] 0.01
@@ -236,25 +224,25 @@ ktd.cv2d <- ktd_cv2d(x = x,
                      loss = "MAD")
 ktd.cv2d
 #> $MAD
-#>       Lambda=0.549693, Sigma=0.617435 Lambda=8.17768e-05, Sigma=0.000593939 
-#>                              178.3224                              236.0522 
-#>      Lambda=0.458658, Sigma=0.0031714      Lambda=0.0381467, Sigma=0.273254 
-#>                              177.6838                              165.6335 
-#>  Lambda=0.000660561, Sigma=3.9994e-05    Lambda=0.0016836, Sigma=0.00026493 
-#>                              190.0375                              177.5821 
-#> Lambda=0.000167454, Sigma=0.000138351 Lambda=1.01682e-05, Sigma=8.37675e-05 
-#>                              184.2623                              183.6617 
-#>    Lambda=0.485044, Sigma=0.000126568 Lambda=1.42196e-05, Sigma=0.000434684 
-#>                              184.4259                              177.8326 
+#>    Lambda=0.000435692, Sigma=0.174196   Lambda=0.00855899, Sigma=0.00201436 
+#>                              326.0259                              543.8239 
+#>  Lambda=0.00518177, Sigma=0.000749782   Lambda=7.25693e-05, Sigma=0.0620986 
+#>                              310.3594                            20117.0356 
+#>   Lambda=0.0513091, Sigma=0.000344321   Lambda=0.0108477, Sigma=0.000277883 
+#>                              306.8999                              307.8369 
+#> Lambda=9.72691e-05, Sigma=2.19179e-05   Lambda=0.0682224, Sigma=0.000455657 
+#>                              290.8662                              313.3406 
+#>   Lambda=0.000228745, Sigma=0.0247239     Lambda=0.166265, Sigma=0.00695988 
+#>                              523.4755                              263.1958 
 #> 
 #> $Best_lambda
-#> [1] 0.0381467
+#> [1] 0.166265
 #> 
 #> $Best_sigma
-#> [1] 0.273254
+#> [1] 0.00695988
 ```
 
-### Fitting
+## Fitting
 
 Then the model is fitted using the hyperparameter(s) selected by the
 `ktd_cv` or `ktd_cv2d`. In the example below, the selected `lam1` and
@@ -269,9 +257,9 @@ ktd.fit <- ktd_estimate(x = x,
                         lam1 = ktd.cv2d$Best_lambda)
 str(ktd.fit$estimates)
 #> List of 1
-#>  $ lambda 0.0381467:List of 3
-#>   ..$ fn         : num 33.2
-#>   ..$ coefficient: num [1:50, 1] -1.235 -0.74 -0.553 5.664 -0.937 ...
+#>  $ lambda 0.166265:List of 3
+#>   ..$ fn         : num 81.4
+#>   ..$ coefficient: num [1:30, 1] 1.45 -1.54 -1.54 -1.32 -1.47 ...
 #>   ..$ convergence: int 0
 ```
 
@@ -281,7 +269,8 @@ parameters as if a `ktweedie` model is fitted and tuning `lam2`
 manually:
 
 ``` r
-sktd.cv2d <- ktd_cv2d(x = x, y = y,
+sktd.cv2d <- ktd_cv2d(x = x,
+                      y = y,
                       kernfunc = rbfdot,
                       lambda = c(1e-3, 1e0),
                       sigma = c(1e-3, 1e0),
@@ -289,7 +278,8 @@ sktd.cv2d <- ktd_cv2d(x = x, y = y,
                       ncoefs = 10,
                       loss = "LL")
 
-sktd.fit <- ktd_estimate(x = x, y = y,
+sktd.fit <- ktd_estimate(x = x,
+                         y = y,
                          kern = rbfdot(sigma = sktd.cv2d$Best_sigma),
                          lam1 = sktd.cv2d$Best_lambda,
                          sparsity = TRUE,
@@ -299,7 +289,7 @@ sktd.fit <- ktd_estimate(x = x, y = y,
                          innerpartol = 1e-5)
 ```
 
-### Prediction
+## Prediction
 
 The function `ktd_predict()` can identify necessary information stored
 in `ktd.fit$data` and `sktd.fit$data` to make predictions at the
@@ -310,13 +300,13 @@ fitting.
 ``` r
 ktd.pred <- ktd_predict(ktd.fit, type = "response")
 head(ktd.pred$prediction)
-#>            [,1]
-#> [1,]  32.219133
-#> [2,]  10.986720
-#> [3,]   4.900612
-#> [4,] 846.841145
-#> [5,]  14.840901
-#> [6,]   9.230015
+#>          [,1]
+#> [1,] 368.4671
+#> [2,] 234.0681
+#> [3,] 234.5898
+#> [4,] 182.8702
+#> [5,] 215.6978
+#> [6,] 293.7244
 ```
 
 If `newdata` with the same dimension as `x` is provided, the prediction
@@ -324,7 +314,7 @@ will be made at the new data points.
 
 ``` r
 # Use a subset of the original x as newdata.
-newdata <- x[1:6,]
+newdata <- x[1:6, ]
 ktd.pred.new <- ktd_predict(ktd.fit,
                             newdata = newdata,
                             type = "response")
@@ -333,16 +323,16 @@ sktd.pred.new <- ktd_predict(sktd.fit,
                              type = "response")
 data.frame(ktweedie = ktd.pred.new$prediction,
            sktweedie = sktd.pred.new$prediction)
-#>     ktweedie sktweedie
-#> 1  32.219133 160.15622
-#> 2  10.986720 117.14240
-#> 3   4.900612  41.17380
-#> 4 846.841145 214.86426
-#> 5  14.840901  82.28839
-#> 6   9.230015  73.05495
+#>   ktweedie sktweedie
+#> 1 368.4671 401.17782
+#> 2 234.0681  67.07903
+#> 3 234.5898  59.02052
+#> 4 182.8702   9.89725
+#> 5 215.6978  30.92446
+#> 6 293.7244 193.77531
 ```
 
-### Variable Selection
+## Variable Selection
 
 In practice, the variable selection results of the `sktweedie` is more
 meaningful. An effective way to fit the `sktweedie` is to start with an
@@ -351,8 +341,8 @@ decrease its value. Note that a warning message is generated for the
 first `lam2`, suggesting that all weights are set to zero.
 
 ``` r
-nlam2 <- 15
-lam2.seq <- 3 * 0.9^(1:nlam2 - 1)
+nlam2 <- 10
+lam2.seq <- 15 * 0.8^(1:nlam2 - 1)
 wts <- matrix(NA, nrow = nlam2, ncol = ncol(x))
 for (i in 1:nlam2) {
   sktd.tmp <- ktd_estimate(x = x,
@@ -368,7 +358,7 @@ for (i in 1:nlam2) {
   if (is.null(wt.tmp)) wts[i, ] <- 0 else wts[i, ] <- wt.tmp
 }
 #> WARNING: All weights are zero in weight update iteration:
-#> [1] 7
+#> [1] 2
 # plot the solution path with graphics::matplot()
 matplot(y = wts,
         x = lam2.seq,
@@ -386,3 +376,5 @@ legend("topright",
 ```
 
 ![](README_files/figure-gfm/solution-path-1.png)<!-- -->
+
+## 
