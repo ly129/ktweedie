@@ -1,6 +1,6 @@
 ## code to prepare `dat` dat goes here
 library(tweedie)
-set.seed(20220715)
+set.seed(20221017)
 
 rand_tweedie<- function(mu,...) {
   Y <- rtweedie(1, mu = mu,...)
@@ -9,9 +9,9 @@ rand_tweedie<- function(mu,...) {
 
 phi <- 0.5
 rho <- 1.5
-P <- 10
-N <- 50
-beta.true <- c(6, -4, 3, 2, -2, rep(0, P-5))
+P <- 5
+N <- 30
+beta.true <- c(6, -4, rep(0, P-2))
 
 x <- matrix(rnorm(N * P), N, P)
 Fx <- sin(x) %*% beta.true
@@ -22,3 +22,4 @@ dat <- list(x, y)
 names(dat) <- c("x", "y")
 
 usethis::use_data(dat, overwrite = TRUE)
+

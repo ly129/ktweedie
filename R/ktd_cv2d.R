@@ -28,21 +28,20 @@
 #' # Provide ranges where the candidate lambdas and sigmas are drawn from
 #' # to the arguments lambda and sigma.
 #' # The number of pairs of candidates to select from is specified by ncoefs.
-#' \donttest{
 #' cv2d <- ktd_cv2d(x = dat$x, y = dat$y,
-#'                    kernfunc = rbfdot,
-#'                    lambda = c(1e-10, 1e-5),
-#'                    sigma = c(1e-10, 1e-5),
-#'                    ncoefs = 6)
+#'                  kernfunc = rbfdot,
+#'                  lambda = c(1e-10, 1e-5),
+#'                  sigma = c(1e-10, 1e-6),
+#'                  ncoefs = 6)
 #' ### Followed by fitting
 #' fit <- ktd_estimate(x = dat$x, y = dat$y,
 #'                     kern = rbfdot(sigma = cv2d$Best_sigma),
 #'                     lam1 = cv2d$Best_lambda)
-#' }
 #' @export
 #'
 #'
-ktd_cv2d <- function(x, y, kernfunc, lambda, sigma, ncoefs, nfolds = 5, rho = 1.5, loss = "LL", ...) {
+ktd_cv2d <- function(x, y, kernfunc, lambda, sigma, ncoefs,
+                     nfolds = 5, rho = 1.5, loss = "LL", ...) {
   ###Fit the model once to get dimensions etc of output
   y <- drop(y)
   y <- as.double(y)

@@ -59,17 +59,15 @@ A list of three items.
 # Provide ranges where the candidate lambdas and sigmas are drawn from
 # to the arguments lambda and sigma.
 # The number of pairs of candidates to select from is specified by ncoefs.
-\donttest{
 cv2d <- ktd_cv2d(x = dat$x, y = dat$y,
-                   kernfunc = rbfdot,
-                   lambda = c(1e-10, 1e-5),
-                   sigma = c(1e-10, 1e-5),
-                   ncoefs = 6)
+                 kernfunc = rbfdot,
+                 lambda = c(1e-8, 1e-3),
+                 sigma = c(1e-8, 1e-3),
+                 ncoefs = 6)
 ### Followed by fitting
 fit <- ktd_estimate(x = dat$x, y = dat$y,
                     kern = rbfdot(sigma = cv2d$Best_sigma),
                     lam1 = cv2d$Best_lambda)
-}
 }
 \seealso{
 \code{\link{ktd_cv}}, \code{\link{ktd_estimate}}, \code{\link{ktd_predict}}
