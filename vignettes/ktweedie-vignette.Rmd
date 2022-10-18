@@ -59,7 +59,7 @@ First we load the `ktweedie` package:
 library(ktweedie)
 ```
 
-The package includes a toy data for demonstration purpose. The $30\times5$ predictor matrix `x` is generated from standard normal distribution and `y` is generated according to$$y\sim \mathrm{Tweedie}(\mu=\sin(x\beta), \rho=1.5,\phi=0.5),$$where $\beta=(6, -4, 0,\ldots,0)$. That said, only the first five predictors are associated with the response.
+The package includes a toy data for demonstration purpose. The $30\times5$ predictor matrix `x` is generated from standard normal distribution and `y` is generated according to$$y\sim \mathrm{Tweedie}(\mu=\sin(x\beta), \rho=1.5,\phi=0.5),$$where $\beta=(6, -4, 0, 0, 0)$. That said, only the first two predictors are associated with the response.
 
 ```{r data, cache = FALSE}
 data(dat)
