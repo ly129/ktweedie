@@ -81,7 +81,8 @@ ktd_cv2d <- function(x, y, kernfunc, lambda, sigma, ncoefs,
     for (j in 1:ncoefs) {
       sigma.now <- sig[j]
       lambda.now <- lambda[j]
-      kern <- sapply(sigma.now, FUN = kernfunc)[[1]]
+      # kern <- sapply(sigma.now, FUN = kernfunc)[[1]]
+      kern <- do.call(what = kernfunc, args = list(sigma.now))
       model <- ktd_estimate(x = x_train, y = y_train, kern, lam1 = lambda.now, rho, ...)
 
       K <- as.matrix(kernelMatrix(kernel = kern, x = x_train, y = x_test))

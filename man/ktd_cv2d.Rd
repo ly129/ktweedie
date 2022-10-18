@@ -61,8 +61,8 @@ A list of three items.
 # The number of pairs of candidates to select from is specified by ncoefs.
 cv2d <- ktd_cv2d(x = dat$x, y = dat$y,
                  kernfunc = rbfdot,
-                 lambda = c(1e-8, 1e-3),
-                 sigma = c(1e-8, 1e-3),
+                 lambda = c(1e-10, 1e-5),
+                 sigma = c(1e-10, 1e-6),
                  ncoefs = 6)
 ### Followed by fitting
 fit <- ktd_estimate(x = dat$x, y = dat$y,
