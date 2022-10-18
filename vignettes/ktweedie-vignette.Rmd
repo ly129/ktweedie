@@ -199,7 +199,7 @@ In practice, the variable selection results of the `sktweedie` is more meaningfu
 
 ```{r solution-path, cache = FALSE, fig.height = 8, fig.width = 8}
 nlam2 <- 10
-lam2.seq <- 15 * 0.8^(1:nlam2 - 1)
+lam2.seq <- 20 * 0.8^(1:nlam2 - 1)
 wts <- matrix(NA, nrow = nlam2, ncol = ncol(x))
 for (i in 1:nlam2) {
   sktd.tmp <- ktd_estimate(x = x,
@@ -224,7 +224,7 @@ matplot(y = wts,
         lwd = 2)
 legend("topright",
        title = "w index",
-       legend = 1:10,
+       legend = 1:5,
        lty = 1:5,
        col = 1:6,
        lwd = 2)

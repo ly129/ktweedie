@@ -229,21 +229,21 @@ ktd.cv2d <- ktd_cv2d(x = x,
 ktd.cv2d
 #> $MAD
 #>    Lambda=0.000435692, Sigma=0.174196   Lambda=0.00855899, Sigma=0.00201436 
-#>                              326.0259                              543.8239 
+#>                              354.1993                              431.4734 
 #>  Lambda=0.00518177, Sigma=0.000749782   Lambda=7.25693e-05, Sigma=0.0620986 
-#>                              310.3594                            20117.0356 
+#>                              469.7289                              327.0395 
 #>   Lambda=0.0513091, Sigma=0.000344321   Lambda=0.0108477, Sigma=0.000277883 
-#>                              306.8999                              307.8369 
+#>                              626.3884                              589.4097 
 #> Lambda=9.72691e-05, Sigma=2.19179e-05   Lambda=0.0682224, Sigma=0.000455657 
-#>                              290.8662                              313.3406 
+#>                              433.5755                              624.1514 
 #>   Lambda=0.000228745, Sigma=0.0247239     Lambda=0.166265, Sigma=0.00695988 
-#>                              523.4755                              263.1958 
+#>                              332.0113                              544.0900 
 #> 
 #> $Best_lambda
-#> [1] 0.166265
+#> [1] 7.25693e-05
 #> 
 #> $Best_sigma
-#> [1] 0.00695988
+#> [1] 0.0620986
 ```
 
 ### Fitting
@@ -261,9 +261,9 @@ ktd.fit <- ktd_estimate(x = x,
                         lam1 = ktd.cv2d$Best_lambda)
 str(ktd.fit$estimates)
 #> List of 1
-#>  $ lambda 0.166265:List of 3
-#>   ..$ fn         : num 81.4
-#>   ..$ coefficient: num [1:30, 1] 1.45 -1.54 -1.54 -1.32 -1.47 ...
+#>  $ lambda 7.25693e-05:List of 3
+#>   ..$ fn         : num 36.6
+#>   ..$ coefficient: num [1:30, 1] 24.82 -9.63 -17.4 44.79 3.7 ...
 #>   ..$ convergence: int 0
 ```
 
@@ -304,13 +304,13 @@ fitting.
 ``` r
 ktd.pred <- ktd_predict(ktd.fit, type = "response")
 head(ktd.pred$prediction)
-#>          [,1]
-#> [1,] 368.4671
-#> [2,] 234.0681
-#> [3,] 234.5898
-#> [4,] 182.8702
-#> [5,] 215.6978
-#> [6,] 293.7244
+#>              [,1]
+#> [1,] 6.448220e+02
+#> [2,] 1.750695e-03
+#> [3,] 9.215399e-02
+#> [4,] 4.713962e+00
+#> [5,] 1.678452e-01
+#> [6,] 1.650646e+00
 ```
 
 If `newdata` with the same dimension as `x` is provided, the prediction
@@ -327,13 +327,13 @@ sktd.pred.new <- ktd_predict(sktd.fit,
                              type = "response")
 data.frame(ktweedie = ktd.pred.new$prediction,
            sktweedie = sktd.pred.new$prediction)
-#>   ktweedie sktweedie
-#> 1 368.4671 401.17782
-#> 2 234.0681  67.07903
-#> 3 234.5898  59.02052
-#> 4 182.8702   9.89725
-#> 5 215.6978  30.92446
-#> 6 293.7244 193.77531
+#>       ktweedie  sktweedie
+#> 1 6.448220e+02 421.931421
+#> 2 1.750695e-03  22.543092
+#> 3 9.215399e-02  23.415272
+#> 4 4.713962e+00   1.642355
+#> 5 1.678452e-01  12.034229
+#> 6 1.650646e+00 122.187222
 ```
 
 ### Variable Selection
@@ -346,7 +346,7 @@ first `lam2`, suggesting that all weights are set to zero.
 
 ``` r
 nlam2 <- 10
-lam2.seq <- 15 * 0.8^(1:nlam2 - 1)
+lam2.seq <- 20 * 0.8^(1:nlam2 - 1)
 wts <- matrix(NA, nrow = nlam2, ncol = ncol(x))
 for (i in 1:nlam2) {
   sktd.tmp <- ktd_estimate(x = x,
@@ -373,7 +373,7 @@ matplot(y = wts,
         lwd = 2)
 legend("topright",
        title = "w index",
-       legend = 1:10,
+       legend = 1:5,
        lty = 1:5,
        col = 1:6,
        lwd = 2)
@@ -381,4 +381,4 @@ legend("topright",
 
 ![](README_files/figure-gfm/solution-path-1.png)<!-- -->
 
-###
+### 
