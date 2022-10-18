@@ -10,22 +10,21 @@ export(ktd_estimate,
        ktd_predict,
        ktd_cv,
        ktd_cv2d,
-
-		## kernel functions
-		"rbfdot",
-		"laplacedot",
-		"besseldot",
-		"polydot",
-		"tanhdot",
-		"vanilladot",
-		"anovadot",
-		"splinedot",
-		"kernelMatrix",
-		"kernelMult",
-		"kernelPol",
-		"kernelFast",
-		"as.kernelMatrix",
-		"kpar"
+       ## kernel functions
+       rbfdot,
+       laplacedot,
+       besseldot,
+       polydot,
+       tanhdot,
+       vanilladot,
+       anovadot,
+       splinedot,
+       kernelMatrix,
+       kernelMult,
+       kernelPol,
+       kernelFast,
+       as.kernelMatrix,
+       kpar
 )
 
 
