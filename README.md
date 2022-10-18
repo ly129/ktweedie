@@ -1,3 +1,7 @@
+# `ktweedie`: Kernel-based Tweedie compound Poisson gamma model using high-dimensional covariates for the analyses of zero-inflated response variables.
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/ly129/ktweedie/workflows/R-CMD-check/badge.svg)](https://github.com/ly129/ktweedie/actions)
+<!-- badges: end -->
 
 # Introduction
 
