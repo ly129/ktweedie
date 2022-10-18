@@ -189,7 +189,7 @@ data.frame(ktweedie = ktd.pred.new$prediction,
 
 In practice, the variable selection results of the `sktweedie` is more meaningful. An effective way to fit the `sktweedie` is to start with an arbitrarily big `lam2` that sets all weights to zero and gradually decrease its value. Note that a warning message is generated for the first `lam2`, suggesting that all weights are set to zero.
 
-```{r solution-path, cache = TRUE, fig.height = 8, fig.width = 8}
+```{r solution-path, cache = FALSE, fig.height = 8, fig.width = 8}
 nlam2 <- 10
 lam2.seq <- 15 * 0.8^(1:nlam2 - 1)
 wts <- matrix(NA, nrow = nlam2, ncol = ncol(x))
