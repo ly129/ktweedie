@@ -254,10 +254,10 @@ ktd.cv2d
 ### Fitting
 
 Then the model is fitted using the hyperparameter(s) selected by the
-`ktd_cv` or `ktd_cv2d`. In the example below, the selected `lam1` and
-`sigma` values are accessed by `ktd.cv2d$Best_lambda` and
-`ktd.cv2d$Best_sigma`, which are then be fed into the `ktd_estimate` to
-perform final model fitting.
+`ktd_cv()` or `ktd_cv2d()`. In the example below, the selected `lam1`
+and `sigma` values are accessed by `ktd.cv2d$Best_lambda` and
+`ktd.cv2d$Best_sigma`, which are then be fed into the `ktd_estimate()`
+to perform final model fitting.
 
 ``` r
 ktd.fit <- ktd_estimate(x = x,
