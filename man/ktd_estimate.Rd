@@ -69,30 +69,19 @@ A list of three items.
 # Provide a sequence of candidate values to the argument lam1.
 # Provide a kernel object to the argument kern.
 lam1.seq <- c(1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1)
-fit <- ktd_estimate(x = dat$x, y = dat$y,
-                    kern = rbfdot(sigma = 1e-8),
-                    lam1 = lam1.seq)
+fit.ktd <- ktd_estimate(x = dat$x, y = dat$y,
+                        kern = rbfdot(sigma = 1e-8),
+                        lam1 = lam1.seq)
 ###### sktweedie ######
-\dontrun{
-# use ktd_cv2d to tune lam1 and sigma in the rbfdot()
-cv2d <- ktd_cv2d(x = dat$x, y = dat$y,
-                 kernfunc = rbfdot,
-                 lambda = c(1e-5, 1e1),
-                 sigma = c(1e-5, 1e1),
-                 ncoefs = 10)
 # Set sparsity to TRUE and a lam2 to control the level of sparsity
 # Decrease lam2 if "WARNING: All weights are zero..."
-fit.sparse <- ktd_estimate(x = dat$x, y = dat$y,
-                           kern = rbfdot(sigma = cv2d$Best_sigma),
-                           lam1 = cv2d$Best_lambda,
-                           sparsity = TRUE,
-                           lam2 = 6,
-                           partol = 1e-4,
-                           innerpartol = 1e-4,
-                           verbose = TRUE)
+fit.sktd <- ktd_estimate(x = dat$x,
+                         y = dat$y,
+                         kern = rbfdot(sigma = 0.1),
+                         lam1 = 5,
+                         sparsity = TRUE,
+                         lam2 = 1)
 # variables with fitted weight equal to 0 are not selected
-var_weights <- fit.sparse$estimates[[1]]$weight
-plot(var_weights)   # First 5 variables are significant in data generation.}
 
 }
 \seealso{
