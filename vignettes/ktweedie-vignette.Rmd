@@ -37,13 +37,10 @@ where $K(\mathbf{w})_{ij}=K(\mathbf{w \odot x}_i, \mathbf{w \odot x}_j)$ involve
 
 # Installation
 
-<!-- From the CRAN. -->
-
-<!-- ```{r cran, eval=FALSE} -->
-
-<!-- install.packages("ktweedie") -->
-
-<!-- ``` -->
+From the CRAN.
+```{r cran, eval=FALSE}
+install.packages("ktweedie")
+```
 
 From the Github.
 

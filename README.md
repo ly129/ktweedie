@@ -71,12 +71,13 @@ involves variable weights
 
 ## Installation
 
-<!-- From the CRAN. -->
-<!-- ```{r cran, eval=FALSE} -->
-<!-- install.packages("ktweedie") -->
-<!-- ``` -->
+1.  From the CRAN.
 
-From the Github.
+``` r
+install.packages("ktweedie")
+```
+
+2.  From the Github.
 
 ``` r
 devtools::install_github("ly129/ktweedie")
