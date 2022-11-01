@@ -160,7 +160,7 @@ subroutine td_sk(N, p, x, y, lambda1, lambda2, sigmas, nval, rho,&
 
             ! call weight update loop
             abstol = 0.0d0
-            call sk_update(N,p,y,rho,sigma,lam1,lam2,dist,param,.false.,partol,abstol,maxit,K,Ka,wt,wtac,wtac_size,fn,conv)
+            call sk_update(N,p,y,rho,sigma,lam1,lam2,dist,param,0,partol,abstol,maxit,K,Ka,wt,wtac,wtac_size,fn,conv)
             ! if (verbose > -1) call intpr("Convergence situation", -1, conv, 1)
 
             if (conv>=7) then

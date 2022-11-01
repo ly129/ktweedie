@@ -1,7 +1,7 @@
 Package: ktweedie
 Title: 'Tweedie' Compound Poisson Model in the Reproducing Kernel Hilbert Space
-Version: 1.0.0
-Date: 2022-10-17
+Version: 1.0.1
+Date: 2022-11-01
 Authors@R: 
     c(person("Yi", "Lian", role = c("aut", "cre"), email = "yi.lian@mail.mcgill.ca"),
       person("Archer Yi", "Yang", role = c("aut", "cph")),
