@@ -1,0 +1,18 @@
+bibentry(
+    bibtype = "Article",
+    title = "A Tweedie Compound Poisson Model in Reproducing Kernel Hilbert Space",
+    author = c(person("Yi", "Lian"),
+               person(c("Archer", "Yi"), "Yang"),
+               person("Boxiang", "Wang"),
+               person("Peng", "Shi"),
+               person(c("Robert", "William"), "Platt")),
+    header = "To cite ktweedie in publications, please use",
+    textVersion = "Yi Lian, Archer Yi Yang, Boxiang Wang, Peng Shi & Robert William Platt (2023) A Tweedie Compound Poisson Model in Reproducing Kernel Hilbert Space, Technometrics, DOI: 10.1080/00401706.2022.2156615",
+    journal = "Technometrics",
+    volume = "0",
+    number = "0",
+    pages = "1-15",
+    year = "2023",
+    publisher = "Taylor & Francis",
+    doi = "10.1080/00401706.2022.2156615"
+)

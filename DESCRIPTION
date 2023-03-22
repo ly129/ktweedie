@@ -9,11 +9,11 @@ Authors@R:
       person("Peng", "Shi", role = c("aut")),
       person("Robert W.", "Platt", role = c("aut"))
      )
-Description: Kernel-based 'Tweedie' compound Poisson gamma model using high-dimensional predictors for the analyses of zero-inflated response variables. The package features built-in estimation, prediction and cross-validation tools and supports choice of different kernel functions.
+Description: Kernel-based 'Tweedie' compound Poisson gamma model using high-dimensional predictors for the analyses of zero-inflated response variables. The package features built-in estimation, prediction and cross-validation tools and supports choice of different kernel functions. For more details, please see Yi Lian, Archer Yi Yang, Boxiang Wang, Peng Shi & Robert William Platt (2023) <doi:10.1080/00401706.2022.2156615>
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.3
 Depends: 
     methods,
     R (>= 3.5.0)
