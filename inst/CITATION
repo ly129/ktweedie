@@ -11,8 +11,8 @@ bibentry(
     journal = "Technometrics",
     volume = "0",
     number = "0",
-    pages = "1-15",
+    pages = "1--15",
     year = "2023",
-    publisher = "Taylor & Francis",
+    publisher = "Taylor \\& Francis",
     doi = "10.1080/00401706.2022.2156615"
 )
