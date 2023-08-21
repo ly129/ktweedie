@@ -15,7 +15,7 @@
 #'
 #' \code{\link{ktd_predict}} Prediction of Tweedie model outcomes.
 #' @author Yi Lian \email{yi.lian@mail.mcgill.ca}, Yi Yang, Boxiang Wang, Peng Shi, Robert W. Platt.
-#' @name ktweedie
+#' @name ktweedie-package
 ## usethis namespace: start
 ## usethis namespace: end
 NULL
