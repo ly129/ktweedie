@@ -1,3 +1,5 @@
+#' @keywords internal
+"_PACKAGE"
 #' ktweedie Package
 #'
 #' Kernel-based Tweedie compound Poisson gamma model using high-dimensional covariates for the analyses of zero-inflated response variables. The package features built-in estimation, prediction and cross-validation tools and supports choice of different kernel functions.
@@ -12,10 +14,8 @@
 #' \code{\link{ktd_cv2d}} Wrapper for cross-validation for simultaneous regularization and kernel parameter tuning.
 #'
 #' \code{\link{ktd_predict}} Prediction of Tweedie model outcomes.
-#'
-#' @docType package
-#'
 #' @author Yi Lian \email{yi.lian@mail.mcgill.ca}, Yi Yang, Boxiang Wang, Peng Shi, Robert W. Platt.
-#'
 #' @name ktweedie
+## usethis namespace: start
+## usethis namespace: end
 NULL
